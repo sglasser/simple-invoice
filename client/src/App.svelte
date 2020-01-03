@@ -1,30 +1,28 @@
 <script>
-	export let name;
+	import Router from  'svelte-spa-router';
+	import routes from './routes.js';
+	import Auth from './auth/auth.js';
+	import Nav from './components/Nav.svelte';
+	import Footer from './components/Footer.svelte';
+	import { push } from 'svelte-spa-router';
+
+	// handle auth if access_token from Auth0 in url hash and navigate to home 
+	const locationHash = window.location.hash;
+	if (/access_token|id_token|error/.test(locationHash)) {
+		Auth.handleAuthentication(locationHash);
+		push('/');
+  }
 </script>
 
-<main>
-	<h1>Greetings {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<Nav></Nav>
+<div class='app'>
+	<Router {routes}/>
+</div>
+<Footer></Footer>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
+	.app {
+		margin: 2em;
+		height: 100%;
 	}
 </style>

@@ -8,6 +8,9 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  client:
+    bucketName: simple-invoice-${self:provider.stage}
+    distributionFolder: ../client/public
   documentation:
     api:
       info:
@@ -20,6 +23,7 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
+  - serverless-finch
 
 provider:
   name: aws
