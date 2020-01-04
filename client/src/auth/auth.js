@@ -1,5 +1,7 @@
 import auth0 from 'auth0-js';
 import { authConfig } from '../../config.js';
+import { auth } from '../stores.js';
+import { push } from 'svelte-spa-router';
 
 class Auth {
 
@@ -11,9 +13,6 @@ class Auth {
       responseType: 'token id_token',
       scope: 'openid'
     });
-    this._accessToken = null;
-    this._idToken = null;
-    this._expiresAt = 0;
   }
 
   login() {
@@ -23,9 +22,12 @@ class Auth {
   handleAuthentication(authResult) {
     this._auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        console.log('Access token: ', authResult.accessToken)
-        console.log('id token: ', authResult.idToken)
-        this.setSession(authResult);
+        auth.set({
+          isAuthenticated: true,
+          userId: authResult.idToken,
+          accessToken: authResult.accessToken
+        });
+        push('/');
       } else if (err) {
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
@@ -70,7 +72,10 @@ class Auth {
   }
 
   isAuthenticated() {
-    return new Date().getTime() < this._expiresAt;
+    console.log(process.env.NODE_ENV)
+    return process.env.NODE_ENV === 'development'?
+      true :
+      this._idToken //&& (new Date().getTime() < this._expiresAt);
   }
 }
 

@@ -1,13 +1,16 @@
 <script>
-  import Auth from '../auth/auth.js';
-  import {authConfig} from '../../config.js';
+  import { invoices } from '../stores.js';
+  import facade from '../facade.js';
+  import Dashboard from '../components/Dashboard.svelte';
+  import Invoices from '../components/Invoices.svelte';
 
-  const login = (event) => {
-    Auth.login();
+  if(!$invoices) {
+    console.log('load invoices')
+    facade.loadInvoices();
   }
 </script>
 
-Here is the dashboard
+<Dashboard></Dashboard>
+<Invoices></Invoices>
 
-<button on:click={login}>Login In</button>
 
