@@ -5,7 +5,6 @@
   import Invoices from '../components/Invoices.svelte';
 
   if(!$invoices.length) {
-    console.log('load invoices')
     facade.loadInvoices();
   }
 </script>

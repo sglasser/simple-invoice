@@ -25,8 +25,7 @@ class AppFacade {
     }
 
   }
-
-
+  
   async createInvoice (invoice) {
     try {
       loading.set(true);
