@@ -27,7 +27,7 @@
 
 <Navbar color="light" light expand="md">
   <NavbarBrand href="/">
-    <img src='/logo.png' width='100px'/>
+    <img src='/logo.png' width='130px'/>
   </NavbarBrand>
   <NavbarToggler on:click={() => (isOpen = !isOpen)} />
   <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>

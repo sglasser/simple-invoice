@@ -26,10 +26,10 @@
       <tbody>
         {#each $invoices as invoice, i}
           <tr>
-            <td>{invoice.number}</td>
+            <td>{invoice.invoiceNumber}</td>
             <td>{invoice.recipient.name}</td> 
             <td>{invoice.total}</td> 
-            <td>{invoice.create}</td>
+            <td>{invoice.created}</td>
             <td>{invoice.due}</td>      
           </tr>
         {/each}

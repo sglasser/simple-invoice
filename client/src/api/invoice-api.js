@@ -2,7 +2,7 @@ import { apiEndpoint } from '../../config.js';
 
 export async function createInvoice(idToken, invoice) {
   const result = await fetch(
-    `${apiEndpoint}/invoice`,
+    `${apiEndpoint}/invoices`,
     {
       method: 'POST',
       body: JSON.stringify(invoice),
@@ -12,7 +12,7 @@ export async function createInvoice(idToken, invoice) {
       }
     }
   );
-  const data = await result.json;
+  const data = await result.json();
   return data;
 }
 
@@ -27,6 +27,6 @@ export async function getInvoices(idToken) {
       }
     }
   );
-  const data = await result.json;
+  const data = await result.json();
   return data;
 }

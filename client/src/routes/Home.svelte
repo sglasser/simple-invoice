@@ -4,7 +4,7 @@
   import Dashboard from '../components/Dashboard.svelte';
   import Invoices from '../components/Invoices.svelte';
 
-  if(!$invoices) {
+  if(!$invoices.length) {
     console.log('load invoices')
     facade.loadInvoices();
   }

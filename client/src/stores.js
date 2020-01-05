@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export const invoices = writable(null);
+export const invoices = writable([]);
 
 export const auth = writable({
   isAuthenticated: false,
@@ -9,3 +9,4 @@ export const auth = writable({
 });
 
 export const loading = writable(false);
+

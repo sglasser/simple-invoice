@@ -50,6 +50,12 @@ provider:
         - codedeploy:*
       Resource:
         - '*'  
+    - Effect: Allow
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
 
 functions:
   hello:
@@ -59,6 +65,42 @@ functions:
           method: get
           path: hello
           cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
+
+  CreateInvoice:
+    handler: src/lambda/http/create-invoice.handler
+    events:
+      - http:
+          method: post
+          path: invoices
+          cors: true
+          # authorizer: Auth
+          # reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new invoice
+            description: Create a new invoice
+            #requestModels:
+              #'application/json': CreateRequest
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
+
+  GetInvoices:
+    handler: src/lambda/http/get-invoices.handler
+    events:
+      - http:
+          method: get
+          path: invoices
+          cors: true
+          # authorizer: Auth
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow

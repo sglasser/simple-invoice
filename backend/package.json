@@ -1,23 +1,30 @@
 {
   "name": "simple-invoice",
   "version": "1.0.0",
-  "description": "Serverless webpack example using Typescript",
-  "main": "handler.js",
+  "description": "Simple Invoice API",
   "scripts": {
     "test": "jest"
   },
   "dependencies": {
+    "@types/http-errors": "^1.6.3",
+    "aws-xray-sdk": "^2.2.0",
+    "http-errors": "^1.7.3",
+    "jsonwebtoken": "^8.5.1",
+    "source-map-support": "^0.5.10",
+    "uuidv4": "^6.0.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.17",
+    "@types/jsonwebtoken": "^8.3.5",
+    "@types/node": "^10.12.18",
+    "aws-sdk": "^2.433.0",
+    "fork-ts-checker-webpack-plugin": "^3.0.1",
     "jest": "^24.9.0",
     "serverless-aws-documentation": "^1.1.0",
     "serverless-finch": "^2.5.2",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-reqvalidator-plugin": "^1.0.3",
-    "source-map-support": "^0.5.10"
-  },
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.17",
-    "@types/node": "^10.12.18",
-    "fork-ts-checker-webpack-plugin": "^3.0.1",
     "serverless-webpack": "^5.2.0",
     "ts-loader": "^5.3.3",
     "typescript": "^3.2.4",

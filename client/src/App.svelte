@@ -5,7 +5,9 @@
 	import Nav from './components/Nav.svelte';
 	import Footer from './components/Footer.svelte';
 	import Overlay from './components/Overlay.svelte';
+	import Toast from './components/Toast.svelte';
 	import { auth } from './stores.js';
+	import { loading } from './stores.js';
 	import { onMount } from 'svelte';
 
 	auth.set({
@@ -25,8 +27,11 @@
 	}
 </script>
 
-<Overlay></Overlay>
+{#if $loading}
+	<Overlay></Overlay>
+{/if}
 {#if $auth.isAuthenticated}
+	<Toast></Toast>
 	<Nav></Nav>
 	<div class='app'>
 		<Router {routes}/>
