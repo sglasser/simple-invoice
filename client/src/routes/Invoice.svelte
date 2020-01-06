@@ -4,11 +4,9 @@
   import RecipientModal from '../components/RecipientModal.svelte';
   import { showRecipientModal } from '../stores.js';
 
-  function showCustomerModal() {
-    showRecipientModal.set(true);
-  }
-
-  async function createInvoice() {
+  const showCustomerModal = () => (showRecipientModal.set(true));
+  
+  const createInvoice = async () => {
     const result = await facade.createInvoice({
       invoiceNumber: 1,
       recipient: {
@@ -31,9 +29,9 @@
       due: '2/1/2020',
       total: 100.00
     });
-
   }
 </script>
+
 <Button on:click={createInvoice}>Create Invoice</Button>
 <Button on:click={showCustomerModal}>Add Recipient</Button>
 <RecipientModal></RecipientModal>

@@ -1,8 +1,7 @@
 
-
-import { render, fireEvent, cleanup } from '@testing-library/svelte'
+import { render } from '@testing-library/svelte'
  
-import App from './App.svelte';
+import Dashboard from './Dashboard.svelte';
  
 describe('App', () => {
  
@@ -10,8 +9,8 @@ describe('App', () => {
   afterEach(cleanup);
  
   test('should render', () => {
-    const {getByText} = render(App, {name: 'World'});
-    expect(getByText('Greetings World!')).toBeInTheDocument(); // found Delete button
+    const { container } = render(Dashboard);
+    expect(container).toContainHTML("Overdue Invoices");
   });
  
   // There is no easy way to test that events are fired

@@ -3,9 +3,7 @@
   import { Table, Card, CardHeader, CardTitle, CardBody, Button } from 'sveltestrap';
   import { push } from 'svelte-spa-router';
 
-  function navigateToInvoice() {
-    push('/invoice');
-  }
+  const navigateToInvoice = () => (push('/invoice'));
 </script>
 
 <Card>

@@ -1,11 +1,14 @@
   <script>
     import {
-      Button, Modal, ModalBody, ModalFooter, ModalHeader
+      Button, 
+      Modal,
+      ModalBody,
+      ModalFooter,
+      ModalHeader
     } from "sveltestrap";
     import { showRecipientModal } from '../stores.js';
 
     const toggle = () => (showRecipientModal.set(false));
-
   </script>
   
   <Modal isOpen={$showRecipientModal} {toggle}>
