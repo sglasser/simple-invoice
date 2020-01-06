@@ -1,6 +1,12 @@
 <script>
   import facade from '../facade.js';
   import { Button } from 'sveltestrap';
+  import RecipientModal from '../components/RecipientModal.svelte';
+  import { showRecipientModal } from '../stores.js';
+
+  function showCustomerModal() {
+    showRecipientModal.set(true);
+  }
 
   async function createInvoice() {
     const result = await facade.createInvoice({
@@ -29,3 +35,6 @@
   }
 </script>
 <Button on:click={createInvoice}>Create Invoice</Button>
+<Button on:click={showCustomerModal}>Add Recipient</Button>
+<RecipientModal></RecipientModal>
+

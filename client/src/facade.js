@@ -9,8 +9,7 @@ class AppFacade {
   constructor () {
     invoices.subscribe(value => {
       console.log('invoices', value);
-    })
-
+    });
   }
 
   async loadInvoices () {

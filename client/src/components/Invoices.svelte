@@ -30,7 +30,7 @@
             <td>{invoice.recipient.name}</td> 
             <td>{invoice.total}</td> 
             <td>{invoice.created}</td>
-            <td>{invoice.due}</td>      
+            <td>{invoice.due}</td>  
           </tr>
         {/each}
       </tbody>
