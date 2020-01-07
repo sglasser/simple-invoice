@@ -31,8 +31,7 @@
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
     "svelte": "^3.0.0",
-    "svelte-jester": "^1.0.3",
-    "svelte-mock": "^0.2.2"
+    "svelte-jester": "^1.0.3"
   },
   "dependencies": {
     "auth0-js": "^9.12.1",
@@ -41,5 +40,16 @@
     "svelte-forms": "^1.2.0",
     "svelte-spa-router": "^2.0.0",
     "sveltestrap": "^3.2.10"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.svelte$": "svelte-jester",
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.html$": "svelte-jester"
+    },
+    "moduleFileExtensions": ["js", "svelte"],
+    "transformIgnorePatterns": ["node_modules/(?!(svelte-spa-router|regexparam)/)"],
+    "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"]
   }
+  
 }

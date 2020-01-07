@@ -6,7 +6,6 @@ import Dashboard from './Dashboard.svelte';
 describe('App', () => {
  
   // Unmounts any components mounted in the previous test.
-  afterEach(cleanup);
  
   test('should render', () => {
     const { container } = render(Dashboard);
