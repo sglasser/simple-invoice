@@ -30,7 +30,6 @@
     mounted () {
       const locationHash = window.location.hash;
 	    if (/access_token|id_token|error/.test(locationHash)) {
-        console.log('handling authentication', locationHash);
 		    Auth.handleAuthentication(locationHash);
 	    } 
     }
