@@ -1,8 +1,8 @@
+import Router from '../../router';
 import { WebAuth } from 'auth0-js';
 import auth0 from 'auth0-js'
 import { authConfig } from '../../config';
 import { mutations } from '../store/store';
-// import { push } from 'svelte-spa-router';
 
 class Auth {
 
@@ -33,7 +33,7 @@ class Auth {
           userId: authResult.idToken,
           accessToken: authResult.accessToken
         });
-        //push('/');
+        Router.push("/")
       } else if (err) {
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
