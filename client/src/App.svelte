@@ -28,7 +28,7 @@
 </script>
 
 {#if $loading}
-	<Overlay></Overlay>
+	<!-- <Overlay></Overlay> -->
 {/if}
 {#if $auth.isAuthenticated}
 	<Toast></Toast>

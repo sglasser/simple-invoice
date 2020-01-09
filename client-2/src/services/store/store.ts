@@ -10,17 +10,22 @@ const state = Vue.observable({
     accessToken: '45566'
   } : null,
   loading: false,
-  invoices: []
+  invoices: [],
+  user: null
 });
 
 export const getters = {
   auth: () => state.auth,
   loading: () => state.loading,
-  invoices: () => state.invoices
+  invoices: () => state.invoices,
+  user: () => state.user
 };
 
 export const mutations = {
   setAuth: (val: any) => ( state.auth = val ),
   setLoading: (val: boolean) => ( state.loading = val ),
-  setInvoices: (val: any) => ( state.invoices = val )
+  setInvoices: (val: any) => ( state.invoices = val ),
+  setUser: (val: any) => ( state.user = val)
 };
+
+// https://dev.to/f3ltron/vue-2-6-6-release-part3-vue-observable-21dk
