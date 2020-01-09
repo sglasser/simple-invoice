@@ -3,7 +3,7 @@
     <div v-if="auth">
       <Overlay></Overlay>
       <Nav></Nav>
-      <router-view></router-view>
+      <router-view class='container'></router-view>
     </div>
     <div v-else>
       <b-button variant="outline-primary" @click="login">Login</b-button>
@@ -42,7 +42,9 @@
 
 <style>
 	#app {
-		margin: 2em;
 		height: 100%;
 	}
+  .container {
+    margin: 1rem;
+  }
 </style>
