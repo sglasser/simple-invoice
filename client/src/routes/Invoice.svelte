@@ -1,8 +1,21 @@
 <script>
+  import { onMount } from 'svelte';
   import facade from '../facade.js';
   import { Button } from 'sveltestrap';
   import RecipientModal from '../components/RecipientModal.svelte';
   import { showRecipientModal } from '../stores.js';
+  import { uuid } from 'uuidv4';
+  import { getInvoiceFromStore } from '../util.js';
+  // for route params
+  export let params = {}
+
+  let invoice;
+
+  onMount(() => {
+    if (params.invoiceId) {
+      console.log(getInvoiceFromStore(params.invoiceId));
+    }
+  });
 
   const showCustomerModal = () => (showRecipientModal.set(true));
   
@@ -11,6 +24,7 @@
     const due = new Date('2020-02-01T06:00:00');
     console.log(due);
     const result = await facade.createInvoice({
+      invoiceId: uuid(), 
       invoiceNumber: 1,
       recipient: {
         name: "Bobs Service",

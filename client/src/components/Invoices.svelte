@@ -18,7 +18,8 @@
   import facade from '../facade.js';
   import { push } from 'svelte-spa-router';
 
-  const navigateToInvoice = () => (push('/invoice'));
+  const create = () => push('/invoice');
+  const editInvoice = (id) => push(`/invoice/${id}`);
   const refresh = () => facade.loadInvoices();
 </script>
 
@@ -64,7 +65,7 @@
         {/each}
       </CustomInput>
     </FormGroup>
-    <Button outline primary on:click={navigateToInvoice}>Create Invoice</Button>
+    <Button outline primary on:click={create}>Create Invoice</Button>
   </CardHeader>
   <CardBody>
     <Table>
@@ -79,7 +80,7 @@
       </thead>
       <tbody>
         {#each $invoices as invoice, i}
-          <tr>
+          <tr on:click={() => editInvoice(invoice.invoiceId)}>
             <td>{invoice.invoiceNumber}</td>
             <td>{invoice.recipient.name}</td> 
             <td>{invoice.total}</td> 
