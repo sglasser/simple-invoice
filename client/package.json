@@ -36,6 +36,7 @@
   "dependencies": {
     "auth0-js": "^9.12.1",
     "bootstrap": "^4.4.1",
+    "moment": "^2.24.0",
     "sirv-cli": "^0.4.4",
     "svelte-forms": "^1.2.0",
     "svelte-spa-router": "^2.0.0",
@@ -47,9 +48,15 @@
       "^.+\\.js$": "babel-jest",
       "^.+\\.html$": "svelte-jester"
     },
-    "moduleFileExtensions": ["js", "svelte"],
-    "transformIgnorePatterns": ["node_modules/(?!(svelte-spa-router|regexparam)/)"],
-    "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"]
+    "moduleFileExtensions": [
+      "js",
+      "svelte"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(svelte-spa-router|regexparam)/)"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
   }
-  
 }

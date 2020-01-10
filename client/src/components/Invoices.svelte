@@ -11,45 +11,57 @@
     CardBody
   } from "sveltestrap";
   import { invoices } from '../stores.js';
+  import { statuses } from '../stores.js';
+  import { years } from '../stores.js';
+  import { months } from '../stores.js';
+  import { searchCriteria } from '../stores.js';
+  import facade from '../facade.js';
   import { push } from 'svelte-spa-router';
 
   const navigateToInvoice = () => (push('/invoice'));
+  const refresh = () => facade.loadInvoices();
 </script>
 
 <Card>
   <CardHeader class='d-flex flex-row justify-content-between align-items-center'>
     <h3>INVOICES</h3> 
     <FormGroup>
-      <CustomInput type="select" id="exampleCustomSelect" name="customSelect">
-        <option value="">Status</option>
-        <option>All</option>
-        <option>Paid</option>
-        <option>Unpaid</option>
+      <CustomInput 
+        bind:value={$searchCriteria.status}
+        on:change={refresh} 
+        type="select" 
+        id="statusSelect" 
+        name="statusSelect">
+        <option value="">- Status -</option>
+        {#each $statuses as status}
+          <option value={status}>{status}</option>
+        {/each}
       </CustomInput>
     </FormGroup>
     <FormGroup>
-      <CustomInput type="select" id="exampleCustomSelect" name="customSelect">
+      <CustomInput 
+        bind:value={$searchCriteria.year} 
+        on:change={refresh} 
+        type="select" 
+        id="yearSelect" 
+        name="yearSelect">
         <option value="">Year Created</option>
-        <option>2020</option>
-        <option>2019</option>
-        <option>2018</option>
+        {#each $years as year}
+          <option value={year}>{year}</option>
+        {/each}
       </CustomInput>
     </FormGroup>
     <FormGroup>
-      <CustomInput type="select" id="exampleCustomSelect" name="customSelect">
+      <CustomInput 
+        bind:value={$searchCriteria.month}
+        on:change={refresh} 
+        type="select" 
+        id="monthSelect" 
+        name="monthSelect">
         <option value="">Month Created</option>
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
+        {#each $months as month}
+          <option value={month.id}>{month.text}</option>
+        {/each}
       </CustomInput>
     </FormGroup>
     <Button outline primary on:click={navigateToInvoice}>Create Invoice</Button>

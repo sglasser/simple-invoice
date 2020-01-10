@@ -22,7 +22,6 @@ class AppFacade {
     } finally {
       loading.set(false);
     }
-
   }
   
   async createInvoice (invoice) {
