@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/svelte'
  
-import Invoices from './components/Invoices.svelte';
+import Invoices from '../src/components/Invoices.svelte';
  
 describe('Invoices', () => {
  
@@ -8,11 +8,12 @@ describe('Invoices', () => {
  
   test('should render', () => {
     const { container } = render(Invoices);
+    expect(container).toBeTruthy();
     // expect(container).;
   });
 
   test('should call api', () => {
-    const { container } = render(Invoices);
+    const { getByText } = render(Invoices);
     const createBtn = getByText('Create Invoice');
   })
  

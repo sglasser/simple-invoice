@@ -1,40 +1,40 @@
-import MockNav from '../tests/MockNav.svelte';
-import MockFooter from '../tests/MockFooter.svelte';
-import MockOverlay from '../tests/MockOverlay.svelte';
-import MockToast from '../tests/MockToast.svelte';
-import MockRouter from '../tests/MockRouter.svelte';
+import MockNav from './MockNav.svelte';
+import MockFooter from './MockFooter.svelte';
+import MockOverlay from './MockOverlay.svelte';
+import MockToast from './MockToast.svelte';
+import MockRouter from './MockRouter.svelte';
 
 jest.mock('svelte-spa-router', () => ({
   default: MockRouter
 }));
-jest.mock('./components/Nav.svelte', () => ({
+jest.mock('../src/components/Nav.svelte', () => ({
   default: MockNav
 }));
-jest.mock('./components/Overlay.svelte', () => ({
+jest.mock('../src/components/Overlay.svelte', () => ({
   default: MockOverlay
 }));
-jest.mock('./components/Toast.svelte', () => ({
+jest.mock('../src/components/Toast.svelte', () => ({
   default: MockToast
 }));
-jest.mock('./components/Footer.svelte', () => ({
+jest.mock('../src/components/Footer.svelte', () => ({
   default: MockFooter
 }));
-jest.mock('./auth/auth.js', () => {
+jest.mock('../src/auth/auth.js', () => {
   return {
     handleAuthentication: jest.fn()
   }
 })
 
 import { render, fireEvent, cleanup } from '@testing-library/svelte';
-import App from './App.svelte';
+import App from '../src/App.svelte';
 import Router from  'svelte-spa-router';
-import routes from './routes.js';
-import Auth from './auth/auth.js';
-import Footer from './components/Footer.svelte';
-import Overlay from './components/Overlay.svelte';
-import Toast from './components/Toast.svelte';
-import { auth } from './stores.js';
-import { loading } from './stores.js';
+import routes from '../src/routes.js';
+import Auth from '../src/auth/auth.js';
+import Footer from '../src/components/Footer.svelte';
+import Overlay from '../src/components/Overlay.svelte';
+import Toast from '../src/components/Toast.svelte';
+import { auth } from '../src/stores.js';
+import { loading } from '../src/stores.js';
 import { onMount } from 'svelte';
 
 

@@ -14,20 +14,21 @@
     Button
   } from 'sveltestrap';
   import { push } from 'svelte-spa-router';
+  import { auth } from '../stores.js';
+  import Auth from '../auth/auth.js';
 
+  $: loginBtnText = $auth.isAuthenticated ? 'Sign Out' : 'Sign In';
+  $: loginBtnAction = $auth.isAuthenticated ? login : logout;
   let isOpen = false;
 
-  function navigateToInvoice() {
-    push('/invoice');
-  }
-  function handleUpdate(event) {
-    isOpen = event.detail.isOpen;
-  }
+  const login = () => Auth.login();
+  const logout = () => Auth.logout();
+  const handleUpdate = (event) => event.detail.isOpen;
 </script>
 
 <Navbar color="light" light expand="md">
   <NavbarBrand href="/">
-    <img src='/logo.png' width='130px'/>
+    <img src='/logo.png' width='130px' alt='Simple Invoice logo'/>
   </NavbarBrand>
   <NavbarToggler on:click={() => (isOpen = !isOpen)} />
   <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
@@ -36,7 +37,7 @@
         <NavLink href="#components/">Settings</NavLink>
       </NavItem>
       <NavItem>
-          <Button outline primary on:click={navigateToInvoice}>Create Invoice</Button>
+        <Button outline primary on:click={loginBtnAction}>{loginBtnText}</Button>
       </NavItem>
     </Nav>
   </Collapse>

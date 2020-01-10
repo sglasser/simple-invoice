@@ -7,6 +7,9 @@
   const showCustomerModal = () => (showRecipientModal.set(true));
   
   const createInvoice = async () => {
+    const now = new Date();
+    const due = new Date('2020-02-01T06:00:00');
+    console.log(due);
     const result = await facade.createInvoice({
       invoiceNumber: 1,
       recipient: {
@@ -25,9 +28,14 @@
           total: 100.00
         }
       ],
-      created: new Date().toLocaleDateString(),
-      due: '2/1/2020',
-      total: 100.00
+      created: now.toLocaleDateString(),
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+      due: due.toLocaleDateString(),
+      dueYear: due.getFullYear(),
+      dueMonth: due.getMonth() + 1,
+      total: 100.00,
+      paid: false
     });
   }
 </script>

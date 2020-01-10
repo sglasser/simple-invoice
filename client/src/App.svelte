@@ -27,19 +27,20 @@
 	}
 </script>
 
-{#if $loading}
-	<!-- <Overlay></Overlay> -->
-{/if}
-{#if $auth.isAuthenticated}
-	<Toast></Toast>
-	<Nav></Nav>
-	<div class='app'>
-		<Router {routes}/>
-	</div>
-	<Footer></Footer>
-{:else}
-	Please log in <button on:click={login}>Login In</button>
-{/if}
+
+	{#if $loading}
+		<Overlay></Overlay>
+	{/if}
+	{#if $auth.isAuthenticated}
+		<Toast></Toast>
+		<Nav></Nav>
+		<div class='app'>
+			<Router {routes}/>
+		</div>
+		<Footer></Footer>
+	{:else}
+		Please log in <button on:click={login}>Login In</button>
+	{/if}
 
 <style>
 	.app {
