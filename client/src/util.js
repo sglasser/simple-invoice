@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { get } from 'svelte/store'
+import { get } from 'svelte/store';
 import { invoices } from './stores.js';
 
 export function getYears() {
@@ -13,5 +13,37 @@ export function getYears() {
 }
 
 export function getInvoiceFromStore(invoiceId) {
-  return get(invoices).filter(invoice => invoice.invoiceId === invoiceId);
+  return get(invoices).find(invoice => invoice.invoiceId === invoiceId);
+}
+
+export function createNewEmptyInvoice() {
+  return {     
+    invoiceId: uuid(), 
+    invoiceNumber: 1,
+    recipient: {
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      phone: '',
+      email: ''
+    },
+    lineItems: [
+      {
+        qty: 1,
+        desc: '',
+        price: 0.00,
+        total: 0.00
+      }
+    ],
+    created: now.toLocaleDateString(),
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    due: due.toLocaleDateString(),
+    dueYear: due.getFullYear(),
+    dueMonth: due.getMonth() + 1,
+    total: 0.00,
+    paid: false
+  };
 }

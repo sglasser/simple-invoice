@@ -1,6 +1,8 @@
+import { apiEndpoint } from '../../config.js';
+
 export async function getUser(idToken) {
   const result = await fetch(
-    `${apiEndpoint}/user/${idToken}`,
+    `${apiEndpoint}/users/${idToken}`,
     {
       method: 'GET',
       headers: {
@@ -20,9 +22,9 @@ export async function updateUser(user, idToken) {
 
 }
 
-export async function createUer(user, idToken) {
+export async function createUser(user, idToken) {
   const result = await fetch(
-    `${apiEndpoint}/user`,
+    `${apiEndpoint}/users`,
     {
       method: 'POST',
       body: JSON.stringify(user),

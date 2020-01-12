@@ -4,7 +4,11 @@ import { getYears } from './util.js';
 
 export const invoices = writable([]);
 
-export const user = writable({});
+export const user = writable({
+  isAuthenticated: false,
+  userId: null,
+  accessToken: null
+});
 
 export const auth = writable({
   isAuthenticated: false,
@@ -15,6 +19,8 @@ export const auth = writable({
 export const loading = writable(false);
 
 export const showRecipientModal = writable(false);
+
+export const showInvoiceModal = writable(false);
 
 export const searchCriteria = writable({
   status: 'ALL',

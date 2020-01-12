@@ -6,13 +6,13 @@
 	import Footer from './components/Footer.svelte';
 	import Overlay from './components/Overlay.svelte';
 	import Toast from './components/Toast.svelte';
-	import { auth } from './stores.js';
+	import { user } from './stores.js';
 	import { loading } from './stores.js';
 	import { onMount } from 'svelte';
 
-	auth.set({
+	user.set({
 		isAuthenticated: true,
-		userId: 987654321,
+		userId: 1234,
 		accessToken: 111111
 	});
 		
@@ -31,7 +31,7 @@
 	{#if $loading}
 		<Overlay></Overlay>
 	{/if}
-	{#if $auth.isAuthenticated}
+	{#if $user.isAuthenticated}
 		<Toast></Toast>
 		<Nav></Nav>
 		<div class='app'>

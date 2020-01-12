@@ -3,10 +3,14 @@ export interface Invoice {
   userId?: string,
   invoiceNumber: number,
   recipient: Recipient,
+  due?: string,
+  lineItems?: LineItem[],
+  paid: boolean,
   created: string,
-  due: string,
-  total: number,
-  lineItems?: LineItem
+  year: number,
+  month: number,
+  dueYear: number,
+  dueMonth: number
 }
 
 export interface Recipient {
@@ -15,12 +19,12 @@ export interface Recipient {
   city?: string,
   state?: string,
   postalCode?: string,
-  phone?: string
+  phone?: string,
+  email?: string
 }
 
 export interface LineItem {
   qty?: number,
   desc?: string,
-  rate?: number,
-  total: number
+  price?: number
 }

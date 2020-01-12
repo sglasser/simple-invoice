@@ -1,6 +1,7 @@
 import auth0 from 'auth0-js';
 import { authConfig } from '../../config.js';
-import { auth } from '../stores.js';
+import { user } from '../stores.js';
+import { getUser } from '../api/user-api.js';
 import { push } from 'svelte-spa-router';
 
 class Auth {
@@ -19,10 +20,11 @@ class Auth {
     this._auth0.authorize();
   }
 
-  handleAuthentication(authResult) {
+  handleAuthentication (authResult) {
     this._auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        auth.set({
+        const userInfo = this.getUserInfo(authResult.idToken);
+        user.set({
           isAuthenticated: true,
           userId: authResult.idToken,
           accessToken: authResult.accessToken
@@ -33,6 +35,16 @@ class Auth {
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
     });
+  }
+
+  async getUserInfo(userId) {
+    try {
+      const user = await getUser(userId);
+      console.log('user', user);
+    } catch (err) {
+      console.log(err);
+      return {};
+    }
   }
 
   getAccessToken() {
