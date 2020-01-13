@@ -27,7 +27,8 @@ class Auth {
         user.set({
           isAuthenticated: true,
           userId: authResult.idToken,
-          accessToken: authResult.accessToken
+          accessToken: authResult.accessToken,
+          ...userInfo
         });
         push('/');
       } else if (err) {

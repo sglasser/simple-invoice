@@ -6,12 +6,14 @@
       ModalFooter,
       ModalHeader
     } from "sveltestrap";
-    import { showRecipientModal } from '../stores.js';
+    import { displayRecipientModal } from '../stores.js';
+
+    export let invoice;
 
     const toggle = () => (showRecipientModal.set(false));
   </script>
   
-  <Modal isOpen={$showRecipientModal} {toggle}>
+  <Modal isOpen={$displayRecipientModal} {toggle}>
     <ModalHeader {toggle}>Add Recipient</ModalHeader>
     <ModalBody>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit,

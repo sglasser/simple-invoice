@@ -3,7 +3,8 @@
   import facade from '../facade.js';
   import RecipientModal from '../components/RecipientModal.svelte';
   import InvoiceModal from '../components/InvoiceModal.svelte';
-  import { showRecipientModal } from '../stores.js';
+  import { displayRecipientModal } from '../stores.js';
+  import { displayInvoiceModal } from '../stores.js';
   import { user } from '../stores.js';
   import { uuid } from 'uuidv4';
   import { getInvoiceFromStore } from '../util.js';
@@ -34,6 +35,7 @@
   });
 
   const showCustomerModal = () => (showRecipientModal.set(true));
+  const showInvoiceModal = () => (displayInvoiceModal.set(true));
   
   const createInvoice = async () => {
     const now = new Date();
@@ -91,7 +93,7 @@
         </Row>
         <Row class='d-flex justify-content-between'>
           <Col>
-            <h3>Sierra Golf Software <span><a>Edit</a></span></h3>
+            <h3>Sierra Golf Software <span><a on:click={showInvoiceModal}>Edit</a></span></h3>
             <span class='text-black-50'>
               9169 Coral Sea St<br>
               Blaine, MN 55449<br>
@@ -191,7 +193,7 @@
 <Button on:click={showCustomerModal}>Add Recipient</Button>
 <Button on:click={createUser}>Create User</Button>
 <RecipientModal invoice={invoice}></RecipientModal>
-<InvoiceModal invoice={invoice}></InvoiceModal>
+<InvoiceModal></InvoiceModal>
 
 <style>
   .banner-height {

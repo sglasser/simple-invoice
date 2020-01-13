@@ -3,23 +3,17 @@ import { user } from './stores.js';
 import { get } from 'svelte/store';
 import { loading } from './stores.js';
 import { createInvoice, getInvoices } from './api/invoice-api.js';
-import { createUser } from './api/user-api.js';
+import { createUser, updateUser } from './api/user-api.js';
 import { push } from 'svelte-spa-router';
-import Auth from './auth/auth.js';
 
 class AppFacade {
-
   constructor () {
-    invoices.subscribe(value => {
-      console.log('invoices', value);
-    });
-    this.userId = get(user).userId;
   }
 
   async loadInvoices () {
     try {
       loading.set(true);
-      const result = await getInvoices(this.userId);
+      const result = await getInvoices(get(user).userId);
       invoices.set(result);
     } catch (err) {
       console.log(err);
@@ -31,7 +25,7 @@ class AppFacade {
   async createInvoice (invoice) {
     try {
       loading.set(true);
-      const result = await createInvoice(this.userId, invoice);
+      const result = await createInvoice(get(user).userId, invoice);
       // check result if valid
       invoices.update(values => [...values, result]);
       push('/')
@@ -45,11 +39,26 @@ class AppFacade {
   async createUser (user) {
     try {
       loading.set(true);
-      const result = await createUser(user, this.userId);
-      console.log(result);
-      
+      const result = await createUser(user, get(user).userId);
+      console.log(result); 
     } catch (err) {
       console.log(err)
+    } finally {
+      loading.set(false);
+    }
+  }
+
+  async updateUser (user) {
+    try {
+      loading.set(true);
+      const result = await updateUser(user, get(user).userId);
+      user.set(user);
+      return true;
+      // TODO show success toast
+    } catch(err) {
+      console.log(err);
+      // TODO show error toast
+      return false;
     } finally {
       loading.set(false);
     }

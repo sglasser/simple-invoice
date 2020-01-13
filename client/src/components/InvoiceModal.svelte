@@ -4,22 +4,51 @@
       Modal,
       ModalBody,
       ModalFooter,
-      ModalHeader
+      ModalHeader,
+      Input,
+      FormGroup
     } from "sveltestrap";
-    import { showInvoiceModal } from '../stores.js';
+    import { displayInvoiceModal } from '../stores.js';
+    import { user } from '../stores.js';
+    import facade from '../facade.js';
 
-    export let invoice;
-    
-    const toggle = () => (showInvoiceModal.set(false));
+    const save = () => facade.updateUser(user) ? toggle() : false;
+    const toggle = () => (displayInvoiceModal.set(false));
   </script>
   
-  <Modal isOpen={$showInvoiceModal} {toggle}>
-    <ModalHeader {toggle}>Add Recipient</ModalHeader>
+  <Modal isOpen={$displayInvoiceModal} {toggle}>
+    <ModalHeader {toggle}>Invoice Info</ModalHeader>
     <ModalBody>
-  
+      <FormGroup>
+        <Input
+          bind:value={$user.name}
+          placeholder="Company Name" 
+          class='form-control-sm'
+        />
+        <Input
+          bind:value={$user.address}
+          placeholder="Company Address" 
+          class='form-control-sm'
+        />
+        <Input
+          bind:value={$user.city}
+          placeholder="Company City" 
+          class='form-control-sm'
+        />
+        <Input
+          bind:value={$user.state}
+          placeholder="Company State/Province" 
+          class='form-control-sm'
+        />
+        <Input
+          bind:value={$user.postal}
+          placeholder="Company Postal" 
+          class='form-control-sm'
+        />
+      </FormGroup>
     </ModalBody>
     <ModalFooter>
-      <Button color="primary" on:click={toggle}>
+      <Button color="primary" on:click={save}>
         Save
       </Button>
       <Button color="secondary" on:click={toggle}>

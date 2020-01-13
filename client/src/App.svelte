@@ -10,10 +10,19 @@
 	import { loading } from './stores.js';
 	import { onMount } from 'svelte';
 
+	// TODO remove, temp for dev work
 	user.set({
 		isAuthenticated: true,
-		userId: 1234,
-		accessToken: 111111
+		userId: '1234',
+		accessToken: 111111,
+		recipientId: '1234',
+		name: 'Sierra Golf Software LLC',
+		address: '9169 Coral Sea St',
+		city: 'Blaine',
+		state: 'MN',
+		postal: '55449',
+		phone: '763-218-2571',
+		email: 'steve@steveglasser.com'
 	});
 		
 	// handle auth if access_token from Auth0 in url hash and navigate to home 

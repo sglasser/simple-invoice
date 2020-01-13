@@ -18,9 +18,9 @@ export const auth = writable({
 
 export const loading = writable(false);
 
-export const showRecipientModal = writable(false);
+export const displayRecipientModal = writable(false);
 
-export const showInvoiceModal = writable(false);
+export const displayInvoiceModal = writable(false);
 
 export const searchCriteria = writable({
   status: 'ALL',

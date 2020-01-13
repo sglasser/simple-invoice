@@ -85,7 +85,7 @@ export class Db {
       ExpressionAttributeValues: {
         ':n': updatedUser.name
       },
-      Key: { "userId": userId, "recpientId": updatedUser.recipientId}
+      Key: { "userId": userId, "recipientId": updatedUser.recipientId}
     }).promise();
   }
 
