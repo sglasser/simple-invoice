@@ -11,6 +11,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const userId = event.pathParameters.userId;
   const updatedUser: User = JSON.parse(event.body);
 
+  logger.info(`Updating user:`, updatedUser);
+  
   await Db.getInstance().updateUser(updatedUser, userId, updatedUser.recipientId );
 
   logger.info(`Updated userId: ${userId} with recipientId: ${updatedUser.recipientId} `, updatedUser);
@@ -21,6 +23,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: ''
+    body:''
   };
 }

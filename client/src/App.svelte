@@ -16,13 +16,16 @@
 		userId: '1234',
 		accessToken: 111111,
 		recipientId: '1234',
-		name: 'Sierra Golf Software LLC',
+		company: 'Sierra Golf Software',
 		address: '9169 Coral Sea St',
 		city: 'Blaine',
 		state: 'MN',
 		postal: '55449',
 		phone: '763-218-2571',
-		email: 'steve@steveglasser.com'
+		email: 'steve@steveglasser.com',
+		recipients: [
+			
+		]
 	});
 		
 	// handle auth if access_token from Auth0 in url hash and navigate to home 

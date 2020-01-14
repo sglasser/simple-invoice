@@ -36,10 +36,10 @@ class AppFacade {
     }
   }
 
-  async createUser (user) {
+  async createUser (newUser) {
     try {
       loading.set(true);
-      const result = await createUser(user, get(user).userId);
+      const result = await createUser(newUser, get(user).userId);
       console.log(result); 
     } catch (err) {
       console.log(err)
@@ -48,11 +48,12 @@ class AppFacade {
     }
   }
 
-  async updateUser (user) {
+  async updateUser (updatedUser) {
     try {
       loading.set(true);
-      const result = await updateUser(user, get(user).userId);
-      user.set(user);
+      const result = await updateUser(updatedUser, get(user).userId);
+      console.log(result);
+      user.set(updatedUser);
       return true;
       // TODO show success toast
     } catch(err) {

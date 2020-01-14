@@ -12,7 +12,7 @@
     import { user } from '../stores.js';
     import facade from '../facade.js';
 
-    const save = () => facade.updateUser(user) ? toggle() : false;
+    const save = () => facade.updateUser($user) ? toggle() : false;
     const toggle = () => (displayInvoiceModal.set(false));
   </script>
   
@@ -21,7 +21,7 @@
     <ModalBody>
       <FormGroup>
         <Input
-          bind:value={$user.name}
+          bind:value={$user.company}
           placeholder="Company Name" 
           class='form-control-sm'
         />

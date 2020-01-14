@@ -10,7 +10,7 @@
 
     export let invoice;
 
-    const toggle = () => (showRecipientModal.set(false));
+    const toggle = () => (displayRecipientModal.set(false));
   </script>
   
   <Modal isOpen={$displayRecipientModal} {toggle}>

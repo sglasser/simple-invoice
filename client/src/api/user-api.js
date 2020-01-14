@@ -27,8 +27,9 @@ export async function updateUser(user, idToken) {
       }
     }
   );
-  const data = await result.json();
-  return data;
+  // TODO response status and throw error if not 204
+  console.log('updateUser result', result)
+
 }
 
 export async function createUser(user, idToken) {

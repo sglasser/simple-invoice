@@ -79,11 +79,12 @@ export class Db {
   // TODO added all user fields to update
   async updateUser(updatedUser: User, userId: string, recipientId: string) {
     this.logger.info('updateUser', userId, recipientId);
+    console.log('updatedUser', updatedUser)
     return this.docClient.update({
       TableName: process.env.USER_TABLE,
-      UpdateExpression: 'set name = :n',
+      UpdateExpression: 'set company = :n',
       ExpressionAttributeValues: {
-        ':n': updatedUser.name
+        ':n': updatedUser.company
       },
       Key: { "userId": userId, "recipientId": updatedUser.recipientId}
     }).promise();
