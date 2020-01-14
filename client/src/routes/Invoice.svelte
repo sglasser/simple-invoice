@@ -6,6 +6,7 @@
   import { displayRecipientModal } from '../stores.js';
   import { displayInvoiceModal } from '../stores.js';
   import { user } from '../stores.js';
+  import { recipients } from '../stores.js';
   import { uuid } from 'uuidv4';
   import { getInvoiceFromStore } from '../util.js';
   import {
@@ -20,19 +21,24 @@
     CardBody,
     Col,
     Container,
-    Row
+    Row,
+    Input
   } from "sveltestrap";
   // for route params
   export let params = {}
  
   let invoice = null;
-  let partyType = 'SELLER';
-  let party;
 
+  $: if (invoice) {
+    invoice.total = invoice.lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2);
+  }
 
   onMount(() => {
     if (params.invoiceId) {
       invoice = getInvoiceFromStore(params.invoiceId);
+    }
+    if (!$recipients.length) {
+      facade.getRecipients();
     }
   });
 
@@ -95,16 +101,24 @@
         </Row>
         <Row class='d-flex justify-content-between'>
           <Col>
-            <h3>{$user.company} <span><a on:click={showInvoicerModal}>Edit</a></span></h3>
+            <Row>
+              <Col xs='auto'>
+                <h3>
+                  {$user.company} 
+                </h3>
+              </Col>
+              <Col>
+                <Button secondary outline size='sm' on:click={showInvoicerModal}>
+                  Edit
+                </Button> 
+              </Col>
+            </Row>
             <span class='text-black-50'>
               {$user.address}<br>
               {$user.city}, {$user.state} {$user.postal}<br>
               {$user.phone}<br>
               {$user.email}
             </span>
-          </Col>
-          <Col class='text-right'>
-            <!--empty--> 
           </Col>
         </Row>
         <Row>
@@ -114,20 +128,30 @@
         </Row>
         <Row>
           <Col>
-            <span class='text-black-50'>
-              BILL TO: <span><a on:click={showRecipientModal}>Add</a></span>
-            </span>
-            <br>
-              <FormGroup>
-                <Input type="select" bind:value={invoice.recipient}>
-                  {#each $user.recipients as recipient}
-                    <option value={recipient}>{recipient.company}</option>
-                  {/each}
-                </Input>
-              </FormGroup>
-            <strong>{invoice.recipient.name}</strong><br>
-            {invoice.recipient.address}<br>
-            {invoice.recipient.city}, {invoice.recipient.state} {invoice.recipient.postalCode}
+            <Row>
+              <Col xs='auto'>
+               <span class='text-black-50'>
+                  BILL TO:
+                </span>
+                <Button secondary outline size='sm' on:click={showRecipientModal}>
+                  Add
+                </Button> 
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Input type="select" bind:value={invoice.recipient}>
+                    {#each $recipients as recipient}
+                      <option value={recipient}>{recipient.company}</option>
+                    {/each}
+                  </Input>
+                </FormGroup>
+                <strong>{invoice.recipient.company}</strong><br>
+                {invoice.recipient.address}<br>
+                {invoice.recipient.city}, {invoice.recipient.state} {invoice.recipient.postalCode}
+              </Col>
+            </Row>
           </Col>
           <Col>
             <span class='text-black-50'>
@@ -171,7 +195,7 @@
                   <tr>
                     <td>{lineItem.qty}</td>
                     <td>{lineItem.desc}</td> 
-                    <td>${lineItem.rate}</td> 
+                    <td>${lineItem.price}</td> 
                     <td class='text-right'>${lineItem.total}</td>
                   </tr>
                 {/each}
@@ -209,5 +233,9 @@
     height: 5px;
     font-size: 1px;
     line-height: 1px;
+  }
+
+  h3 .edit-link { 
+    display: inline-block; 
   }
 </style>

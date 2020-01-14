@@ -10,6 +10,8 @@ export const user = writable({
   accessToken: null
 });
 
+export const recipients = writable([]);
+
 export const auth = writable({
   isAuthenticated: false,
   userId: null,

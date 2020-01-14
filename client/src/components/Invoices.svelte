@@ -83,7 +83,7 @@
           {#each $invoices as invoice, i}
             <tr on:click={() => editInvoice(invoice.invoiceId)}>
               <td>{invoice.invoiceNumber}</td>
-              <td>{invoice.recipient.name}</td> 
+              <td>{invoice.recipient.company}</td> 
               <td>{invoice.total}</td> 
               <td>{invoice.created}</td>
               <td>{invoice.due}</td>  

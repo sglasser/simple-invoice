@@ -1,10 +1,12 @@
-import { invoices } from './stores.js';
+import { invoices, recipients } from './stores.js';
 import { user } from './stores.js';
 import { get } from 'svelte/store';
 import { loading } from './stores.js';
 import { createInvoice, getInvoices } from './api/invoice-api.js';
 import { createUser, updateUser } from './api/user-api.js';
+import { getRecipients, createRecipient } from './api/recipient-api.js';
 import { push } from 'svelte-spa-router';
+import { uuid } from 'uuidv4';
 
 class AppFacade {
   constructor () {
@@ -21,13 +23,40 @@ class AppFacade {
       loading.set(false);
     }
   }
+
+  async getRecipients () {
+    try {
+      loading.set(true);
+      const result = await getRecipients(get(user).userId);
+      console.log('recipients', result);
+      recipients.set(result);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      loading.set(false);
+    }
+  }
+
+  async createRecipient (recipient) {
+    try {
+      recipient.userId = get(user).userId;
+      recipient.recipientId = uuid();
+      loading.set(true);
+      const result = await createRecipient(recipient, get(user).userId);
+      recipients.update(values => [...values, recipient]);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      loading.set(false);
+    }
+  }
   
   async createInvoice (invoice) {
     try {
       loading.set(true);
       const result = await createInvoice(invoice, get(user).userId);
       // check result if valid
-      invoices.update(values => [...values, result]);
+      invoices.update(values => [...values, invoice]);
       push('/')
     } catch (err) {
       console.log(err);

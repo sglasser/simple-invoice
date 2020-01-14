@@ -17,7 +17,7 @@ export async function getUser(idToken) {
 
 export async function updateUser(user, idToken) {
   const result = await fetch(
-    `${apiEndpoint}/user/${idToken}`,
+    `${apiEndpoint}/user`,
     {
       method: 'PATCH',
       body: JSON.stringify(user),
