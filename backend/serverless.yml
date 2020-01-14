@@ -40,8 +40,9 @@ provider:
 
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    INVOICE_TABLE: INVOICES-${self:provider.stage}
-    USER_TABLE: USERS-${self:provider.stage}
+    INVOICE_TABLE: INVOICE-${self:provider.stage}
+    USER_TABLE: USER-${self:provider.stage}
+    RECIPIENT_TABLE: RECIPIENT-${self:provider.stage}
     INVOICE_S3_BUCKET: simple-invoice-${self:provider.stage}
 
   iamRoleStatements:
@@ -58,26 +59,12 @@ provider:
         - "*"
 
 functions:
-  hello:
-    handler: src/lambda/http/handler.hello
-    events:
-      - http:
-          method: get
-          path: hello
-          cors: true
-    iamRoleStatementsInherit: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
-
   CreateInvoice:
     handler: src/lambda/http/create-invoice.handler
     events:
       - http:
           method: post
-          path: invoices
+          path: invoice
           cors: true
           # authorizer: Auth
           # reqValidatorName: RequestBodyValidator
@@ -98,7 +85,7 @@ functions:
     events:
       - http:
           method: get
-          path: invoices
+          path: invoice
           cors: true
           # authorizer: Auth
           # reqValidatorName: RequestBodyValidator
@@ -114,12 +101,12 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
 
-  UpdateInvoices:
+  UpdateInvoice:
     handler: src/lambda/http/update-invoice.handler
     events:
       - http:
           method: patch
-          path: invoices/{invoiceId}
+          path: invoice
           cors: true
           # authorizer: Auth
           # reqValidatorName: RequestBodyValidator
@@ -140,13 +127,13 @@ functions:
     events:
       - http:
           method: post
-          path: users
+          path: user
           cors: true
           # authorizer: Auth
           # reqValidatorName: RequestBodyValidator
           documentation:
-            summary: Create a new user or recipient
-            description: Create a new user or recipient
+            summary: Create a new user
+            description: Create a new user
             #requestModels:
               #'application/json': CreateRequest
     iamRoleStatementsInherit: true
@@ -156,18 +143,18 @@ functions:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}
 
-  GetUsers:
-    handler: src/lambda/http/get-users.handler
+  GetUser:
+    handler: src/lambda/http/get-user.handler
     events:
       - http:
           method: get
-          path: users
+          path: user
           cors: true
           # authorizer: Auth
           # reqValidatorName: RequestBodyValidator
           documentation:
-            summary: Get users and their recipients
-            description: Get user and their recipients
+            summary: Get user
+            description: Get user
             #requestModels:
               #'application/json': CreateRequest
     iamRoleStatementsInherit: true
@@ -182,13 +169,13 @@ functions:
     events:
       - http:
           method: patch
-          path: users/{userId}
+          path: user
           cors: true
           # authorizer: Auth
           # reqValidatorName: RequestBodyValidator
           documentation:
-            summary: Update user or recipient
-            description: Update a user or recipient
+            summary: Update user
+            description: Update a user
             #requestModels:
               #'application/json': CreateRequest
     iamRoleStatementsInherit: true
@@ -197,6 +184,69 @@ functions:
         Action:
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}
+
+  CreateRecipient:
+    handler: src/lambda/http/create-recipient.handler
+    events:
+      - http:
+          method: post
+          path: recipient
+          cors: true
+          # authorizer: Auth
+          # reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a recipient
+            description: Create a recipient
+            #requestModels:
+              #'application/json': CreateRequest
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECIPIENT_TABLE}
+
+  GetRecipients:
+    handler: src/lambda/http/get-recipients.handler
+    events:
+      - http:
+          method: get
+          path: recipient
+          cors: true
+          # authorizer: Auth
+          # reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Get recipients
+            description: Get recipients
+            #requestModels:
+              #'application/json': CreateRequest
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECIPIENT_TABLE}
+
+  UpdateRecipient:
+    handler: src/lambda/http/update-recipient.handler
+    events:
+      - http:
+          method: patch
+          path: recipient
+          cors: true
+          # authorizer: Auth
+          # reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Update recipient
+            description: Update recipient
+            #requestModels:
+              #'application/json': CreateRequest
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECIPIENT_TABLE}
           
 resources:
   Resources:
@@ -233,7 +283,19 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.USER_TABLE}
+
+    RecipientTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
           - AttributeName: recipientId
+            AttributeType: S
+          - AttributeName: userId
             AttributeType: S
         KeySchema:
           - AttributeName: userId
@@ -241,7 +303,7 @@ resources:
           - AttributeName: recipientId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.USER_TABLE}
+        TableName: ${self:provider.environment.RECIPIENT_TABLE}
 
 
     # RequestBodyValidator:

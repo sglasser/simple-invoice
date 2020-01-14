@@ -10,7 +10,7 @@ class AppFacade {
   constructor () {
   }
 
-  async loadInvoices () {
+  async getInvoices () {
     try {
       loading.set(true);
       const result = await getInvoices(get(user).userId);
@@ -25,7 +25,7 @@ class AppFacade {
   async createInvoice (invoice) {
     try {
       loading.set(true);
-      const result = await createInvoice(get(user).userId, invoice);
+      const result = await createInvoice(invoice, get(user).userId);
       // check result if valid
       invoices.update(values => [...values, result]);
       push('/')

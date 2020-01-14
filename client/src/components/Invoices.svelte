@@ -68,27 +68,31 @@
     <Button outline primary on:click={create}>Create Invoice</Button>
   </CardHeader>
   <CardBody>
-    <Table>
-      <thead>
-        <tr>
-          <th>Invoice Num</th>
-          <th>Recipient</th>
-          <th>Amount</th>
-          <th>Created</th>
-          <th>Due Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each $invoices as invoice, i}
-          <tr on:click={() => editInvoice(invoice.invoiceId)}>
-            <td>{invoice.invoiceNumber}</td>
-            <td>{invoice.recipient.name}</td> 
-            <td>{invoice.total}</td> 
-            <td>{invoice.created}</td>
-            <td>{invoice.due}</td>  
+    {#if $invoices.length}
+      <Table>
+        <thead>
+          <tr>
+            <th>Invoice Num</th>
+            <th>Recipient</th>
+            <th>Amount</th>
+            <th>Created</th>
+            <th>Due Date</th>
           </tr>
-        {/each}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {#each $invoices as invoice, i}
+            <tr on:click={() => editInvoice(invoice.invoiceId)}>
+              <td>{invoice.invoiceNumber}</td>
+              <td>{invoice.recipient.name}</td> 
+              <td>{invoice.total}</td> 
+              <td>{invoice.created}</td>
+              <td>{invoice.due}</td>  
+            </tr>
+          {/each}
+        </tbody>
+      </Table>
+    {:else}
+      No Invoices To Display
+    {/if}  
   </CardBody>
 </Card>

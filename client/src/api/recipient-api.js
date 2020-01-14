@@ -1,8 +1,8 @@
 import { apiEndpoint } from '../../config.js';
 
-export async function getUser(idToken) {
+export async function getRecipients(idToken) {
   const result = await fetch(
-    `${apiEndpoint}/user/${idToken}`,
+    `${apiEndpoint}/recipient`,
     {
       method: 'GET',
       headers: {
@@ -15,12 +15,12 @@ export async function getUser(idToken) {
   return data;
 }
 
-export async function updateUser(user, idToken) {
+export async function updateRecipient(recipient, idToken) {
   const result = await fetch(
-    `${apiEndpoint}/user/${idToken}`,
+    `${apiEndpoint}/recipient`,
     {
       method: 'PATCH',
-      body: JSON.stringify(user),
+      body: JSON.stringify(recipient),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${idToken}`
@@ -28,16 +28,16 @@ export async function updateUser(user, idToken) {
     }
   );
   // TODO response status and throw error if not 204
-  console.log('updateUser result', result)
+  console.log('updateRecipient result', result)
 
 }
 
-export async function createUser(user, idToken) {
+export async function createRecipient(recipient, idToken) {
   const result = await fetch(
-    `${apiEndpoint}/user`,
+    `${apiEndpoint}/recipient`,
     {
       method: 'POST',
-      body: JSON.stringify(user),
+      body: JSON.stringify(recipient),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${idToken}`

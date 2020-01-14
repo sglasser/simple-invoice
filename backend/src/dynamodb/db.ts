@@ -1,6 +1,7 @@
-//import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { Invoice } from '../models/Invoice';
+
+import { Invoice } from '../models/invoice';
 import { User } from '../models/User';
+import { Recipient } from '../models/recipient';
 import * as AWSXRay from 'aws-xray-sdk';
 import * as AWS from 'aws-sdk';
 import { createLogger } from '../utils/logger';
@@ -44,15 +45,15 @@ export class Db {
   }
 
   // TODO - add all fields to update
-  async updateInvoice(updatedInvoice: Invoice, userId: string, invoiceId: string) {
-    this.logger.info('update', userId, invoiceId);
+  async updateInvoice(updatedInvoice: Invoice) {
+    this.logger.info('update invoice', updatedInvoice.invoiceId);
     return this.docClient.update({
       TableName: process.env.INVOICE_TABLE,
       UpdateExpression: 'set lineItems = :li',
       ExpressionAttributeValues: {
         ':li': updatedInvoice.lineItems
       },
-      Key: { "userId": userId, "invoiceId": invoiceId}
+      Key: {"invoiceId": updatedInvoice.invoiceId}
     }).promise();
   }
 
@@ -64,8 +65,8 @@ export class Db {
     }).promise();
   }
 
-  async getUsers(userId): Promise<User[]> {
-    this.logger.info('getUsers', userId);
+  async getUser(userId): Promise<User[]> {
+    this.logger.info('getUser', userId);
     const result = await this.docClient.query({
       TableName: process.env.USER_TABLE,
       KeyConditionExpression: 'userId = :u',
@@ -77,16 +78,48 @@ export class Db {
   }
 
   // TODO added all user fields to update
-  async updateUser(updatedUser: User, userId: string, recipientId: string) {
-    this.logger.info('updateUser', userId, recipientId);
-    console.log('updatedUser', updatedUser)
+  async updateUser(updatedUser: User) {
+    this.logger.info('update user', updatedUser.userId);
     return this.docClient.update({
       TableName: process.env.USER_TABLE,
       UpdateExpression: 'set company = :n',
       ExpressionAttributeValues: {
         ':n': updatedUser.company
       },
-      Key: { "userId": userId, "recipientId": updatedUser.recipientId}
+      Key: { "userId": updatedUser.userId}
+    }).promise();
+  }
+
+  async createRecipient(recipient: Recipient) {
+    this.logger.info('create recipient', recipient);
+    return this.docClient.put({
+      TableName: process.env.RECIPIENT_TABLE,
+      Item: recipient
+    }).promise();
+  }
+
+  async getRecipients(userId): Promise<Recipient[]> {
+    this.logger.info('get recipients', userId);
+    const result = await this.docClient.query({
+      TableName: process.env.RECIPIENT_TABLE,
+      KeyConditionExpression: 'userId = :u',
+      ExpressionAttributeValues: {
+        ':u': userId
+      }
+    }).promise();
+    return result.Items as Recipient[];
+  }
+
+  // TODO added all recipient fields to update
+  async updateRecipient(updatedRecipient: Recipient) {
+    this.logger.info('update recipient', updatedRecipient.recipientId);
+    return this.docClient.update({
+      TableName: process.env.RECIPIENT_TABLE,
+      UpdateExpression: 'set company = :n',
+      ExpressionAttributeValues: {
+        ':n': updatedRecipient.company
+      },
+      Key: { "recipientId": updatedRecipient.recipientId}
     }).promise();
   }
 

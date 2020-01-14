@@ -6,7 +6,7 @@
 
   onMount(() => {
     if(!$invoices.length) {
-      facade.loadInvoices();
+      facade.getInvoices();
     }
   });
 </script>

@@ -1,8 +1,8 @@
 import { apiEndpoint } from '../../config.js';
 
-export async function createInvoice(idToken, invoice) {
+export async function createInvoice(invoice, idToken) {
   const result = await fetch(
-    `${apiEndpoint}/invoices`,
+    `${apiEndpoint}/invoice`,
     {
       method: 'POST',
       body: JSON.stringify(invoice),
@@ -18,7 +18,7 @@ export async function createInvoice(idToken, invoice) {
 
 export async function getInvoices(idToken) {
   const result = await fetch(
-    `${apiEndpoint}/invoices`,
+    `${apiEndpoint}/invoice`,
     {
       method: 'GET',
       headers: {

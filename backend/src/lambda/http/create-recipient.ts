@@ -2,20 +2,20 @@ import 'source-map-support/register';
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { createLogger } from '../../utils/logger';
 // import { getUserId } from '../../lambda/utils';
-import { Invoice } from '../../models/invoice';
+import { Recipient } from '../../models/Recipient';
 import { Db } from '../../dynamodb/db';
 
-const logger = createLogger('create-invoice');
+const logger = createLogger('create-recipient');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   
-  const invoice: Invoice = JSON.parse(event.body);
-  invoice.userId = '1234'
-  // invoice.userId = getUserId(event);
+  const recipient: Recipient = JSON.parse(event.body);
+  const userId = '1234'
+  //const userId = getUserId(event);
 
-  await Db.getInstance().createInvoice(invoice);
+  await Db.getInstance().createRecipient(recipient);
   
-  logger.info('new invoice created', invoice);
+  logger.info('new recipient created', recipient);
 
   return {
     statusCode: 201,
@@ -23,6 +23,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true,
     },
-    body: JSON.stringify(invoice)
+    body: JSON.stringify(recipient)
   };
 }

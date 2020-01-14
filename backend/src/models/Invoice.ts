@@ -1,22 +1,23 @@
-import { User } from './user';
+import { Recipient } from './recipient';
 
 export interface Invoice {
-  invoiceId?: string,
-  userId?: string,
+  invoiceId: string,
+  userId: string,
   invoiceNumber: number,
-  recipient: User,
+  recipient: Recipient,
   due?: string,
   lineItems?: LineItem[],
-  paid: boolean,
+  paid?: boolean,
   created: string,
-  year: number,
-  month: number,
-  dueYear: number,
-  dueMonth: number
+  year?: number,
+  month?: number,
+  dueYear?: number,
+  dueMonth?: number,
+  url?: string
 }
 
 export interface LineItem {
   qty?: number,
   desc?: string,
-  price?: number
+  price: number
 }
