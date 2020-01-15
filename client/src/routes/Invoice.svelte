@@ -3,12 +3,14 @@
   import facade from '../facade.js';
   import RecipientModal from '../components/RecipientModal.svelte';
   import InvoicerModal from '../components/InvoicerModal.svelte';
+  import LineItemModal from '../components/LineItemModal.svelte';
   import { displayRecipientModal } from '../stores.js';
   import { displayInvoiceModal } from '../stores.js';
+  import { displayLineItemModal } from '../stores.js';
   import { user } from '../stores.js';
   import { recipients } from '../stores.js';
   import { uuid } from 'uuidv4';
-  import { getInvoiceFromStore } from '../util.js';
+  import { getInvoiceFromStore, getEmptyInvoice } from '../util.js';
   import {
     Button,
     CustomInput,
@@ -24,26 +26,33 @@
     Row,
     Input
   } from "sveltestrap";
+
   // for route params
   export let params = {}
  
-  let invoice = null;
-
-  $: if (invoice) {
-    invoice.total = invoice.lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2);
-  }
+  let currentInvoice = null;
+  let currentLineItem = null;
 
   onMount(() => {
-    if (params.invoiceId) {
-      invoice = getInvoiceFromStore(params.invoiceId);
-    }
-    if (!$recipients.length) {
-      facade.getRecipients();
-    }
+    currentInvoice = params.invoiceId ? getInvoiceFromStore(params.invoiceId) : getEmptyInvoice();
+    if (!$recipients.length) facade.getRecipients(); 
   });
 
+  // computed properties
+  $: invoiceTotal = currentInvoice ? 
+    currentInvoice.lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2) :
+    '';
+  $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
+    `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.state} ${currentInvoice.recipient.postal}` :
+    ``;
+
+  // functions
   const showRecipientModal = () => displayRecipientModal.set(true);
   const showInvoicerModal = () => displayInvoiceModal.set(true);
+  const showLineItemModal = (lineItem) => {
+    currentLineItem = lineItem ? lineItem : getEmptyLineItem();
+    displayLineItemModal.set(true);
+  }
   
   const createInvoice = async () => {
     const now = new Date();
@@ -62,9 +71,11 @@
       },
       lineItems: [
         {
+          lineItemId: '2233',
           qty: 1,
           desc: 'Web dev',
           price: 100.00,
+          total: 100.00
         }
       ],
       created: now.toLocaleDateString(),
@@ -90,7 +101,7 @@
     });
   }
 </script>
-{#if invoice}
+{#if currentInvoice}
   <Card>
     <CardBody>
       <Container>
@@ -141,15 +152,16 @@
             <Row>
               <Col>
                 <FormGroup>
-                  <Input type="select" bind:value={invoice.recipient}>
+                  <select bind:value={currentInvoice.recipient} class='form-control form-control-sm'>
+                    <option value=''>Select Recipient</option>
                     {#each $recipients as recipient}
-                      <option value={recipient}>{recipient.company}</option>
+                      <option value={recipient}>
+                        <strong>{recipient.company}</strong>
+                      </option>
                     {/each}
-                  </Input>
+                  </select>
                 </FormGroup>
-                <strong>{invoice.recipient.company}</strong><br>
-                {invoice.recipient.address}<br>
-                {invoice.recipient.city}, {invoice.recipient.state} {invoice.recipient.postalCode}
+                  {@html recipientAddress}
               </Col>
             </Row>
           </Col>
@@ -191,7 +203,7 @@
                 </tr>
               </thead>
               <tbody>
-                {#each invoice.lineItems as lineItem, i}
+                {#each currentInvoice.lineItems as lineItem, i}
                   <tr>
                     <td>{lineItem.qty}</td>
                     <td>{lineItem.desc}</td> 
@@ -199,6 +211,11 @@
                     <td class='text-right'>${lineItem.total}</td>
                   </tr>
                 {/each}
+                <tr>
+                  <td colspan='4'>
+                    <Button secondary outline size='sm' on:click={showLineItemModal}>Add Item</Button>
+                  </td>
+                </tr>
               </tbody>
             </Table>
           </Col>
@@ -215,7 +232,7 @@
             </span>
           </Col>
           <Col class='text-right text-primary font-weight-bold pr-2'>
-            ${invoice.total}
+            ${invoiceTotal}
           </Col>
         </Row>
       </Container>
@@ -225,8 +242,9 @@
 <Button on:click={createInvoice}>Create Invoice</Button>
 <Button on:click={showRecipientModal}>Add Recipient</Button>
 <Button on:click={createUser}>Create User</Button>
-<RecipientModal invoice={invoice}></RecipientModal>
+<RecipientModal invoice={currentInvoice}></RecipientModal>
 <InvoicerModal></InvoicerModal>
+<LineItemModal lineItem={currentLineItem}></LineItemModal>
 
 <style>
   .banner-height {

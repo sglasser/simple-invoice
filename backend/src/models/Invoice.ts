@@ -17,7 +17,9 @@ export interface Invoice {
 }
 
 export interface LineItem {
-  qty?: number,
+  lineItemId: string,
+  qty: number,
   desc?: string,
-  price: number
+  price: number,
+  total: number,
 }

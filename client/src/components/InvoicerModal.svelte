@@ -6,7 +6,8 @@
       ModalFooter,
       ModalHeader,
       Input,
-      FormGroup
+      FormGroup,
+      Form
     } from "sveltestrap";
     import { displayInvoiceModal } from '../stores.js';
     import { user } from '../stores.js';
@@ -17,35 +18,45 @@
   </script>
   
   <Modal isOpen={$displayInvoiceModal} {toggle}>
-    <ModalHeader {toggle}>Invoice Info</ModalHeader>
+    <ModalHeader {toggle}>My Company Info</ModalHeader>
     <ModalBody>
-      <FormGroup>
-        <Input
-          bind:value={$user.company}
-          placeholder="Company Name" 
-          class='form-control-sm'
-        />
-        <Input
-          bind:value={$user.address}
-          placeholder="Company Address" 
-          class='form-control-sm'
-        />
-        <Input
-          bind:value={$user.city}
-          placeholder="Company City" 
-          class='form-control-sm'
-        />
-        <Input
-          bind:value={$user.state}
-          placeholder="Company State/Province" 
-          class='form-control-sm'
-        />
-        <Input
-          bind:value={$user.postal}
-          placeholder="Company Postal" 
-          class='form-control-sm'
-        />
-      </FormGroup>
+      <Form>
+        <FormGroup>
+          <Input
+            bind:value={$user.company}
+            placeholder="Company Name" 
+            class='form-control-sm'
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            bind:value={$user.address}
+            placeholder="Company Address" 
+            class='form-control-sm'
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            bind:value={$user.city}
+            placeholder="Company City" 
+            class='form-control-sm'
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            bind:value={$user.state}
+            placeholder="Company State/Province" 
+            class='form-control-sm'
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            bind:value={$user.postal}
+            placeholder="Company Postal" 
+            class='form-control-sm'
+          />
+        </FormGroup>
+      </Form>
     </ModalBody>
     <ModalFooter>
       <Button color="primary" on:click={save}>

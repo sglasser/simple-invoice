@@ -49,7 +49,7 @@
 		<div class='app'>
 			<Router {routes}/>
 		</div>
-		<Footer></Footer>
+		<!-- <Footer></Footer> -->
 	{:else}
 		Please log in <button on:click={login}>Login In</button>
 	{/if}

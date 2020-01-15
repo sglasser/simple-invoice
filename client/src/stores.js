@@ -24,6 +24,8 @@ export const displayRecipientModal = writable(false);
 
 export const displayInvoiceModal = writable(false);
 
+export const displayLineItemModal = writable(false);
+
 export const searchCriteria = writable({
   status: 'ALL',
   year: moment().get('year'),

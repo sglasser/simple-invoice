@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { uuid } from 'uuidv4';
 import { get } from 'svelte/store';
 import { invoices } from './stores.js';
 
@@ -16,34 +17,38 @@ export function getInvoiceFromStore(invoiceId) {
   return get(invoices).find(invoice => invoice.invoiceId === invoiceId);
 }
 
-export function createNewEmptyInvoice() {
+export function getEmptyInvoice() {
+  const now = moment();
   return {     
     invoiceId: uuid(), 
     invoiceNumber: 1,
     recipient: {
-      name: '',
+      recipientId: '',
+      company: '',
       address: '',
       city: '',
       state: '',
-      postalCode: '',
+      postal: '',
       phone: '',
       email: ''
     },
     lineItems: [
-      {
-        qty: 1,
-        desc: '',
-        price: 0.00,
-        total: 0.00
-      }
     ],
-    created: now.toLocaleDateString(),
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
-    due: due.toLocaleDateString(),
-    dueYear: due.getFullYear(),
-    dueMonth: due.getMonth() + 1,
-    total: 0.00,
+    created: now,
+    year: now.year(),
+    month: now.month(),
+    due: now.add(30, 'days'),
+    dueYear: now.add(30, 'days').year(),
+    dueMonth: now.add(30, 'days').month(),
     paid: false
   };
 }
+
+export function getEmptyLineItem() {
+  return {
+    qty: 0,
+    desc: '',
+    price: 0.00,
+    total: 0.00
+  };
+};
