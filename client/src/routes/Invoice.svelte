@@ -9,8 +9,9 @@
   import { displayLineItemModal } from '../stores.js';
   import { user } from '../stores.js';
   import { recipients } from '../stores.js';
+  import { isInvoiceDirty } from '../stores.js';
   import { uuid } from 'uuidv4';
-  import { getInvoiceFromStore, getEmptyInvoice } from '../util.js';
+  import { getInvoiceFromStore, getEmptyInvoice, getEmptyLineItem } from '../util.js';
   import {
     Button,
     CustomInput,
@@ -53,6 +54,17 @@
     currentLineItem = lineItem ? lineItem : getEmptyLineItem();
     displayLineItemModal.set(true);
   }
+  const updateLineItem = (event) => {
+    const updatedLineItem = event.detail;
+    if (!updatedLineItem.lineItemId) updatedLineItem.lineItemId = uuid();
+    const i = currentInvoice.lineItems.findIndex(item => item.lineItemId === updatedLineItem.lineItemId);
+    const lineItems = [...currentInvoice.lineItems]
+    i !== -1 ? lineItems[i] = updatedLineItem :
+      lineItems.push(updatedLineItem);
+    currentInvoice.lineItems = lineItems;
+    setInvoiceDirty();
+  }
+  const setInvoiceDirty = () => isInvoiceDirty.set(true)
   
   const createInvoice = async () => {
     const now = new Date();
@@ -152,7 +164,7 @@
             <Row>
               <Col>
                 <FormGroup>
-                  <select bind:value={currentInvoice.recipient} class='form-control form-control-sm'>
+                  <select bind:value={currentInvoice.recipient} on:change={setInvoiceDirty} class='form-control form-control-sm'>
                     <option value=''>Select Recipient</option>
                     {#each $recipients as recipient}
                       <option value={recipient}>
@@ -199,12 +211,12 @@
                   <th>QUANTITY</th>
                   <th>DESCRIPTION</th>
                   <th>UNIT PRICE</th>
-                  <th class='text-right'>PRICE</th>
+                  <th class='text-right'>TOTAL</th>
                 </tr>
               </thead>
               <tbody>
                 {#each currentInvoice.lineItems as lineItem, i}
-                  <tr>
+                  <tr on:click={event => showLineItemModal(lineItem)}>
                     <td>{lineItem.qty}</td>
                     <td>{lineItem.desc}</td> 
                     <td>${lineItem.price}</td> 
@@ -213,7 +225,7 @@
                 {/each}
                 <tr>
                   <td colspan='4'>
-                    <Button secondary outline size='sm' on:click={showLineItemModal}>Add Item</Button>
+                    <Button secondary outline size='sm' on:click={event => showLineItemModal(null)}>Add Item</Button>
                   </td>
                 </tr>
               </tbody>
@@ -244,7 +256,7 @@
 <Button on:click={createUser}>Create User</Button>
 <RecipientModal invoice={currentInvoice}></RecipientModal>
 <InvoicerModal></InvoicerModal>
-<LineItemModal lineItem={currentLineItem}></LineItemModal>
+<LineItemModal on:lineItemUpdate={updateLineItem} lineItem={currentLineItem}></LineItemModal>
 
 <style>
   .banner-height {

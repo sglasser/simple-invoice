@@ -2,6 +2,7 @@ import { invoices, recipients } from './stores.js';
 import { user } from './stores.js';
 import { get } from 'svelte/store';
 import { loading } from './stores.js';
+import { isInvoiceDirty } from './stores.js';
 import { createInvoice, getInvoices } from './api/invoice-api.js';
 import { createUser, updateUser } from './api/user-api.js';
 import { getRecipients, createRecipient } from './api/recipient-api.js';
@@ -50,6 +51,13 @@ class AppFacade {
       loading.set(false);
     }
   }
+
+
+
+  upsertInvoice (invoice) {
+    // invoice.invoiceId ? this.updateInvoice(invoice) : this.createInvoice(invoice);
+  }
+
   
   async createInvoice (invoice) {
     try {
@@ -92,6 +100,15 @@ class AppFacade {
     } finally {
       loading.set(false);
     }
+  }
+
+  upsertLineItem (lineItem, invoice) {
+    console.log(invoice);
+    if (!lineItem.lineItemId) {
+      lineItem.lineItemId = uuid();
+      invoice.lineItems.push(lineItem);
+    }
+    isInvoiceDirty.set(true);
   }
 }
 

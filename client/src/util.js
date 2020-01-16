@@ -46,9 +46,10 @@ export function getEmptyInvoice() {
 
 export function getEmptyLineItem() {
   return {
-    qty: 0,
+    lineItemId: null,
+    qty: '',
     desc: '',
-    price: 0.00,
-    total: 0.00
+    price: '',
+    total: ''
   };
 };

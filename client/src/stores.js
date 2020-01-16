@@ -26,6 +26,8 @@ export const displayInvoiceModal = writable(false);
 
 export const displayLineItemModal = writable(false);
 
+export const isInvoiceDirty = writable(false);
+
 export const searchCriteria = writable({
   status: 'ALL',
   year: moment().get('year'),

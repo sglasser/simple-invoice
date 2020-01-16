@@ -8,13 +8,21 @@
       Input,
       FormGroup
     } from "sveltestrap";
+    import { createEventDispatcher } from 'svelte';
     import { displayLineItemModal } from '../stores.js';
     import facade from '../facade.js';
 
-    export let lineItem = {}
+    export let lineItem = {};
+    const dispatch = createEventDispatcher();
+    $: total = lineItem ? (lineItem.qty * lineItem.price).toFixed(2) : 0;
 
-    const save = () => toggle();
-    const toggle = () => (displayLineItemModal.set(false));
+    const save = () => {
+      lineItem.total = total;
+      dispatch('lineItemUpdate', lineItem);
+      toggle();
+    };
+    const updateTotal = () => lineItem.total = (lineItem.qty * lineItem.price).toFixed(2);
+    const toggle = () => displayLineItemModal.set(false);
   </script>
   
   <Modal isOpen={$displayLineItemModal} {toggle}>
@@ -43,7 +51,8 @@
       </FormGroup>
       <FormGroup>
         <Input
-          bind:value={lineItem.total}
+          readonly
+          bind:value={total}
           placeholder="Total" 
           class='form-control-sm'
         />
