@@ -3,7 +3,7 @@ import { user } from './stores.js';
 import { get } from 'svelte/store';
 import { loading } from './stores.js';
 import { isInvoiceDirty } from './stores.js';
-import { createInvoice, getInvoices } from './api/invoice-api.js';
+import { createInvoice, getInvoices, updateInvoice } from './api/invoice-api.js';
 import { createUser, updateUser } from './api/user-api.js';
 import { getRecipients, createRecipient } from './api/recipient-api.js';
 import { push } from 'svelte-spa-router';
@@ -52,25 +52,27 @@ class AppFacade {
     }
   }
 
-
-
-  upsertInvoice (invoice) {
-    // invoice.invoiceId ? this.updateInvoice(invoice) : this.createInvoice(invoice);
-  }
-
-  
-  async createInvoice (invoice) {
+  async upsertInvoice (invoice) {
     try {
       loading.set(true);
-      const result = await createInvoice(invoice, get(user).userId);
-      // check result if valid
-      invoices.update(values => [...values, invoice]);
-      push('/')
+      const userId = get(user).userId;
+      if (invoice.invoiceId) {
+        await updateInvoice(invoice, userId);
+      } else {
+        invoice.invoiceId = uuid();
+        await createInvoice(invoice, userId);
+        // TODO should this invoice actually be pushed into store?
+        // maybe only if it meets current search criteria?
+        invoices.set([...$invoices, invoice]);
+      }
+      isInvoiceDirty.set(false);
+      // TOD show toast
     } catch (err) {
       console.log(err);
+      // TODO show toast
     } finally {
       loading.set(false);
-    }
+    } 
   }
 
   async createUser (newUser) {
@@ -102,14 +104,6 @@ class AppFacade {
     }
   }
 
-  upsertLineItem (lineItem, invoice) {
-    console.log(invoice);
-    if (!lineItem.lineItemId) {
-      lineItem.lineItemId = uuid();
-      invoice.lineItems.push(lineItem);
-    }
-    isInvoiceDirty.set(true);
-  }
 }
 
 const instance = new AppFacade();

@@ -48,6 +48,7 @@
     ``;
 
   // functions
+  const setInvoiceDirty = () => isInvoiceDirty.set(true);
   const showRecipientModal = () => displayRecipientModal.set(true);
   const showInvoicerModal = () => displayInvoiceModal.set(true);
   const showLineItemModal = (lineItem) => {
@@ -64,7 +65,12 @@
     currentInvoice.lineItems = lineItems;
     setInvoiceDirty();
   }
-  const setInvoiceDirty = () => isInvoiceDirty.set(true)
+  const deleteLineItem = (event) => {
+    const lineItemToDelete = event.detail;
+    currentInvoice.lineItems = currentInvoice.lineItems.filter(lineItem => lineItem.lineItemId != lineItemToDelete.lineItemId);
+    setInvoiceDirty();
+  }
+  const saveInvoice = () => facade.saveInvoice(currentInvoice);
   
   const createInvoice = async () => {
     const now = new Date();
@@ -251,12 +257,13 @@
     </CardBody>
   </Card>
 {/if}
-<Button on:click={createInvoice}>Create Invoice</Button>
-<Button on:click={showRecipientModal}>Add Recipient</Button>
-<Button on:click={createUser}>Create User</Button>
 <RecipientModal invoice={currentInvoice}></RecipientModal>
 <InvoicerModal></InvoicerModal>
-<LineItemModal on:lineItemUpdate={updateLineItem} lineItem={currentLineItem}></LineItemModal>
+<LineItemModal 
+  on:updateLineItem={updateLineItem} 
+  on:deleteLineItem={deleteLineItem} 
+  lineItem={currentLineItem}>
+</LineItemModal>
 
 <style>
   .banner-height {

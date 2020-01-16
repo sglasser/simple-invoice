@@ -20,7 +20,7 @@ export function getInvoiceFromStore(invoiceId) {
 export function getEmptyInvoice() {
   const now = moment();
   return {     
-    invoiceId: uuid(), 
+    invoiceId: null, 
     invoiceNumber: 1,
     recipient: {
       recipientId: '',
