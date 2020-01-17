@@ -1,44 +1,73 @@
-
-<script>
+<script context="module">
   import { fly, fade } from 'svelte/transition';
-  import { Toast, ToastBody, ToastHeader } from 'sveltestrap'
+  import { writable } from 'svelte/store';
+  import { Toast, ToastBody, ToastHeader } from 'sveltestrap';
 
-  let visible = false;
-  let color;
-  let title; 
-  let message = 'test';
+ const toastStore = writable({
+   visible: false
+  });
 
-  export const show = (type, timeout, header, text) => {
-    color = type;
-    title = header;
-    message = text;
-    visible = true;
+  // const types = {
+  //   success: {
+  //     color: 'success',
+  //     icon: 'fa-check'
+  //   },
+  //   warning: {
+  //     color: 'warning',
+  //     icon:
+  //   },
+  //   error: {
+  //     color:'danger',
+  //     icon: 
+  //   }, 
+  //   info: {
+  //     color: 'info',
+  //     icon:
+  //   }
+  // }
+
+  export const toast = (color, timeout, header, message) => {
+    toastStore.set({
+      color,
+      header,
+      message,
+      visible: true
+    });
     setTimeout(() => {
-      visible=false;
+      toastStore.set({visible: false})
     }, timeout)
   }
 
-  export function showSticky(color, title, message) {
-    color = color;
-    title = title;
-    message = message;
-    visible = true;
+  export function stickyToast(color, header, message) {
+    toastStore.set({
+      color,
+      header,
+      message,
+      visible: true
+    });
   }
 
+  const close = () => toastStore.set({visible: false})
 </script>
 
-{#if visible}
-  <div class="p-3 mb-3" style="position: absolute; top: 0; right: 0; z-index: 10;" in:fly="{{ x: 200, duration: 2000 }}" out:fade>
+{#if $toastStore.visible}
+  <div class="p-3 mb-3" 
+    style="position: absolute; top: 0; right: 0; z-index: 10;" 
+    in:fly="{{ x: 200, duration: 500 }}" 
+    out:fade
+    on:click="{close}">
     <Toast class="mr-1">
       <ToastHeader>
-        {title}
+        {$toastStore.header}
       </ToastHeader>
-      <ToastBody class='bg-{color}'>
+      <ToastBody class='bg-{$toastStore.color}'>
         <div class='d-flex align-items-center text-white'>
           <i class="fas fa-check fa-2x mr-2"></i>
-          <p>{message}</p>
+          <p>{$toastStore.message}</p>
         </div>
       </ToastBody>
     </Toast>
   </div>
 {/if}
+
+

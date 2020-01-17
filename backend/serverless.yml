@@ -40,7 +40,7 @@ provider:
 
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    INVOICE_TABLE: INVOICEV2-${self:provider.stage}
+    INVOICE_TABLE: INVOICEV4-${self:provider.stage}
     USER_TABLE: USER-${self:provider.stage}
     RECIPIENT_TABLE: RECIPIENT-${self:provider.stage}
     INVOICE_S3_BUCKET: simple-invoice-${self:provider.stage}
@@ -265,14 +265,14 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: invoiceId
-            AttributeType: S
           - AttributeName: userId
+            AttributeType: S
+          - AttributeName: invoiceId
             AttributeType: S
         KeySchema:
-          - AttributeName: invoiceId
-            KeyType: HASH
           - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: invoiceId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.INVOICE_TABLE}

@@ -6,7 +6,7 @@ import { isInvoiceDirty } from './stores.js';
 import { createInvoice, getInvoices, updateInvoice } from './api/invoice-api.js';
 import { createUser, updateUser } from './api/user-api.js';
 import { getRecipients, createRecipient } from './api/recipient-api.js';
-import { push } from 'svelte-spa-router';
+import { toast, stickyToast } from './components/Toast.svelte';
 import { uuid } from 'uuidv4';
 
 class AppFacade {
@@ -29,7 +29,6 @@ class AppFacade {
     try {
       loading.set(true);
       const result = await getRecipients(get(user).userId);
-      console.log('recipients', result);
       recipients.set(result);
     } catch (err) {
       console.log(err);
@@ -53,8 +52,8 @@ class AppFacade {
   }
 
   async upsertInvoice (invoice) {
-    console.log(invoice)
     try {
+      throw Error()
       loading.set(true);
       const userId = get(user).userId;
       if (invoice.invoiceId) {
@@ -64,13 +63,13 @@ class AppFacade {
         await createInvoice(invoice, userId);
         // TODO should this invoice actually be pushed into store?
         // maybe only if it meets current search criteria?
-        invoices.set([...invoices.get(), invoice]);
+        invoices.update(values => [...values, invoice]);
       }
       isInvoiceDirty.set(false);
-      // TOD show toast
+      toast('success', 4000, 'Success', 'Invoice was saved successfully');
     } catch (err) {
       console.log(err);
-      // TODO show toast
+      stickyToast('danger', 'Error', 'Error occured while saving invoice. Invoice was not saved.')
     } finally {
       loading.set(false);
     } 

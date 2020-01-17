@@ -1,4 +1,3 @@
-
 import { Invoice } from '../models/invoice';
 import { User } from '../models/User';
 import { Recipient } from '../models/recipient';
@@ -53,7 +52,7 @@ export class Db {
       ExpressionAttributeValues: {
         ':li': updatedInvoice.lineItems
       },
-      Key: {"invoiceId": updatedInvoice.invoiceId}
+      Key: {"userId": updatedInvoice.invoiceId, "invoiceId": updatedInvoice.invoiceId}
     }).promise();
   }
 
