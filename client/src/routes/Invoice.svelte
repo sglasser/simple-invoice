@@ -40,7 +40,7 @@
   });
 
   // computed properties
-  $: invoiceTotal = currentInvoice ? 
+  $: if (currentInvoice) currentInvoice.total = currentInvoice ? 
     currentInvoice.lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2) :
     '';
   $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
@@ -70,64 +70,16 @@
     currentInvoice.lineItems = currentInvoice.lineItems.filter(lineItem => lineItem.lineItemId != lineItemToDelete.lineItemId);
     setInvoiceDirty();
   }
-  const saveInvoice = () => facade.saveInvoice(currentInvoice);
-  
-  const createInvoice = async () => {
-    const now = new Date();
-    const due = new Date('2020-02-01T06:00:00');
-    const result = await facade.createInvoice({
-      invoiceId: uuid(), 
-      invoiceNumber: 1,
-      recipient: {
-        company: "Jims Service",
-        address: '123 Main',
-        city: 'Blaine',
-        state: 'MN',
-        postalCode: '55449',
-        phone: '763-218-2571',
-        email: 'steve@steveglasser.com'
-      },
-      lineItems: [
-        {
-          lineItemId: '2233',
-          qty: 1,
-          desc: 'Web dev',
-          price: 100.00,
-          total: 100.00
-        }
-      ],
-      created: now.toLocaleDateString(),
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      due: due.toLocaleDateString(),
-      dueYear: due.getFullYear(),
-      dueMonth: due.getMonth() + 1,
-      paid: false
-    });
+  const updateInvoicer = (event) => {
+    facade.upsertInvoicer(event.detail);
   }
-
-  const createUser = async () => {
-    const result = await facade.createUser({
-      recipientId: '1234',
-      company: 'Sierra Golf Software',
-      address: '9169 Coral Sea St',
-      city: 'Blaine',
-      state: 'MN',
-      postal: '55449',
-      phone: '763-218-2571',
-      email: 'steve@steveglasser.com',
-    });
-  }
+  const save = () => facade.upsertInvoice(currentInvoice);
 </script>
+
 {#if currentInvoice}
-  <Card>
-    <CardBody>
-      <Container>
-        <Row>
-          <Col class='bg-primary banner-height'>
-            <span class='text-primary'>Banner</span>
-          </Col>
-        </Row>
+  <div class='card'>
+    <div class='card-body card-top'>
+      <div class='banner container'>
         <Row class='d-flex justify-content-between'>
           <Col>
             <Row>
@@ -137,9 +89,9 @@
                 </h3>
               </Col>
               <Col>
-                <Button secondary outline size='sm' on:click={showInvoicerModal}>
+                <span on:click={showInvoicerModal}>
                   Edit
-                </Button> 
+                </span> 
               </Col>
             </Row>
             <span class='text-black-50'>
@@ -149,24 +101,7 @@
               {$user.email}
             </span>
           </Col>
-        </Row>
-        <Row>
-          <Col>
-            <hr>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Row>
-              <Col xs='auto'>
-               <span class='text-black-50'>
-                  BILL TO:
-                </span>
-                <Button secondary outline size='sm' on:click={showRecipientModal}>
-                  Add
-                </Button> 
-              </Col>
-            </Row>
+          <Col class='pull-right'>
             <Row>
               <Col>
                 <FormGroup>
@@ -179,10 +114,23 @@
                     {/each}
                   </select>
                 </FormGroup>
-                  {@html recipientAddress}
+              </Col>
+              <Col>
+                <span on:click={showRecipientModal}>Add</span>
               </Col>
             </Row>
+            <span class='text-black-50'>
+              {@html recipientAddress}
+            </span>
+          
           </Col>
+        </Row>
+        <Row>
+          <Col>
+            <hr>
+          </Col>
+        </Row>
+        <Row>
           <Col>
             <span class='text-black-50'>
               PLEASE MAKE PAYABLE TO:
@@ -191,10 +139,6 @@
               {$user.company}
           </Col>
           <Col class='text-right'>
-            <span class='text-black-50'>
-             INVOICE:
-            </span>
-            <br>
             <span class='text-primary font-weight-bold'>
               Invoice: 1030
             </span>
@@ -250,15 +194,22 @@
             </span>
           </Col>
           <Col class='text-right text-primary font-weight-bold pr-2'>
-            ${invoiceTotal}
+            ${currentInvoice.total}
           </Col>
         </Row>
-      </Container>
-    </CardBody>
-  </Card>
+            <div class='row'>
+
+      <Button primary outline on:click={save}>Save Invoice</Button>
+    </div>
+      </div>
+    </div>
+
+  </div>
 {/if}
 <RecipientModal invoice={currentInvoice}></RecipientModal>
-<InvoicerModal></InvoicerModal>
+<InvoicerModal
+  on:updateInvoicer={updateInvoicer}>
+</InvoicerModal>
 <LineItemModal 
   on:updateLineItem={updateLineItem} 
   on:deleteLineItem={deleteLineItem} 
@@ -266,13 +217,17 @@
 </LineItemModal>
 
 <style>
-  .banner-height {
-    height: 5px;
-    font-size: 1px;
-    line-height: 1px;
+  .banner {
+    border-top: 20px solid #007bff;
+    padding-top: 20px;
   }
 
   h3 .edit-link { 
     display: inline-block; 
   }
+
+  .card-top {
+    padding-top: 0px;
+  }
 </style>
+

@@ -40,7 +40,7 @@ provider:
 
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    INVOICE_TABLE: INVOICE-${self:provider.stage}
+    INVOICE_TABLE: INVOICEV2-${self:provider.stage}
     USER_TABLE: USER-${self:provider.stage}
     RECIPIENT_TABLE: RECIPIENT-${self:provider.stage}
     INVOICE_S3_BUCKET: simple-invoice-${self:provider.stage}
@@ -267,13 +267,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: invoiceId
             AttributeType: S
-          - AttributeName: userId
-            AttributeType: S
         KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
           - AttributeName: invoiceId
-            KeyType: RANGE
+            KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.INVOICE_TABLE}
 

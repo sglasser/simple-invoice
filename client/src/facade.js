@@ -53,6 +53,7 @@ class AppFacade {
   }
 
   async upsertInvoice (invoice) {
+    console.log(invoice)
     try {
       loading.set(true);
       const userId = get(user).userId;
@@ -63,7 +64,7 @@ class AppFacade {
         await createInvoice(invoice, userId);
         // TODO should this invoice actually be pushed into store?
         // maybe only if it meets current search criteria?
-        invoices.set([...$invoices, invoice]);
+        invoices.set([...invoices.get(), invoice]);
       }
       isInvoiceDirty.set(false);
       // TOD show toast
@@ -75,35 +76,21 @@ class AppFacade {
     } 
   }
 
-  async createUser (newUser) {
+  async upsertInvoicer (invoicer) {
     try {
       loading.set(true);
-      const result = await createUser(newUser, get(user).userId);
-      console.log(result); 
+      if (invoicer.userId) {
+        await updateUser(invoicer, get(user).userId);
+      } else {
+        await createUser(invoicer, invoicer.userId);
+      }
     } catch (err) {
-      console.log(err)
-    } finally {
-      loading.set(false);
-    }
-  }
-
-  async updateUser (updatedUser) {
-    try {
-      loading.set(true);
-      const result = await updateUser(updatedUser, get(user).userId);
-      console.log(result);
-      user.set(updatedUser);
-      return true;
-      // TODO show success toast
-    } catch(err) {
       console.log(err);
-      // TODO show error toast
-      return false;
+      // TODO show toast
     } finally {
       loading.set(false);
     }
   }
-
 }
 
 const instance = new AppFacade();

@@ -10,10 +10,16 @@
       Form
     } from "sveltestrap";
     import { displayInvoiceModal } from '../stores.js';
+    import { createEventDispatcher } from "svelte";
     import { user } from '../stores.js';
     import facade from '../facade.js';
 
-    const save = () => facade.updateUser($user) ? toggle() : false;
+    const dispatch = createEventDispatcher();
+
+    const save = () =>  {
+      dispatch("updateInvoicer", $user);
+      toggle();
+    }
     const toggle = () => (displayInvoiceModal.set(false));
   </script>
   
