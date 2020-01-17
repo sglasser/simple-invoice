@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 
 	// TODO remove, temp for dev work
+	// https://flaviocopes.com/svelte-export-from-component/
 	user.set({
 		isAuthenticated: true,
 		userId: '1234',
@@ -27,12 +28,16 @@
 			
 		]
 	});
-		
+	let toast;
 	// handle auth if access_token from Auth0 in url hash and navigate to home 
 	const locationHash = window.location.hash;
 	if (/access_token|id_token|error/.test(locationHash)) {
 		Auth.handleAuthentication(locationHash);
 	}
+
+	onMount(() => {
+		toast.show('success', 3000, 'Saved', 'Your request was saved')
+	})
 	
 	function login () {
 		Auth.login();

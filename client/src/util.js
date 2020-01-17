@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { uuid } from 'uuidv4';
 import { get } from 'svelte/store';
 import { invoices } from './stores.js';
 
