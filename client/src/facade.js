@@ -53,7 +53,6 @@ class AppFacade {
 
   async upsertInvoice (invoice) {
     try {
-      throw Error()
       loading.set(true);
       const userId = get(user).userId;
       if (invoice.invoiceId) {

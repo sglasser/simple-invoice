@@ -23,10 +23,7 @@
 		state: 'MN',
 		postal: '55449',
 		phone: '763-218-2571',
-		email: 'steve@steveglasser.com',
-		recipients: [
-			
-		]
+		email: 'steve@steveglasser.com'
 	});
 	let toast;
 	// handle auth if access_token from Auth0 in url hash and navigate to home 

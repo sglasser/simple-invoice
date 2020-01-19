@@ -33,13 +33,13 @@ export function getEmptyInvoice() {
     },
     lineItems: [
     ],
-    created: now,
-    year: now.year(),
-    month: now.month(),
-    due: now.add(30, 'days'),
-    dueYear: now.add(30, 'days').year(),
-    dueMonth: now.add(30, 'days').month(),
-    paid: false
+    created: now.format('MM/DD/YYYY'),
+    year: now.format('YYYY'),
+    month: now.format('MM'),
+    due: now.add(30, 'days').format('MM/DD/YYYY'),
+    dueYear: now.add(30, 'days').format('YYYY'),
+    dueMonth: now.add(30, 'days').format('MM'),
+    paid: false,
   };
 }
 

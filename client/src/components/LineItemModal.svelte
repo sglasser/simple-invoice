@@ -13,7 +13,9 @@
   import facade from "../facade.js";
 
   export let lineItem = {};
+
   const dispatch = createEventDispatcher();
+
   $: total = lineItem ? (lineItem.qty * lineItem.price).toFixed(2) : 0;
 
   const save = () => {
@@ -21,11 +23,14 @@
     dispatch("updateLineItem", lineItem);
     toggle();
   };
+
   const del = () => {
     dispatch("deleteLineItem", lineItem);
     toggle();
   }
+
   const updateTotal = () => (lineItem.total = (lineItem.qty * lineItem.price).toFixed(2));
+  
   const toggle = () => displayLineItemModal.set(false);
 </script>
 

@@ -43,16 +43,22 @@ export class Db {
     return result.Items as Invoice[];
   }
 
-  // TODO - add all fields to update
   async updateInvoice(updatedInvoice: Invoice) {
     this.logger.info('update invoice', updatedInvoice.invoiceId);
     return this.docClient.update({
       TableName: process.env.INVOICE_TABLE,
-      UpdateExpression: 'set lineItems = :li',
+      UpdateExpression: 'set lineItems = :li, recipient = :r, due = :d, paid = :p, dueYear = :dy, dueMonth = :dm, attachmentUrl = :url',
       ExpressionAttributeValues: {
-        ':li': updatedInvoice.lineItems
+        ':li': updatedInvoice.lineItems,
+        ':r': updatedInvoice.recipient,
+        ':d': updatedInvoice.due,
+        ':p': updatedInvoice.paid,
+        ':dy': updatedInvoice.dueYear,
+        ':dm': updatedInvoice.dueMonth,
+        ':url': 'TEST URL'
+
       },
-      Key: {"userId": updatedInvoice.invoiceId, "invoiceId": updatedInvoice.invoiceId}
+      Key: {"userId": updatedInvoice.userId, "invoiceId": updatedInvoice.invoiceId}
     }).promise();
   }
 
@@ -76,14 +82,19 @@ export class Db {
     return result.Items as User[];
   }
 
-  // TODO added all user fields to update
   async updateUser(updatedUser: User) {
     this.logger.info('update user', updatedUser.userId);
     return this.docClient.update({
       TableName: process.env.USER_TABLE,
-      UpdateExpression: 'set company = :n',
+      UpdateExpression: 'set company = :n, address = :a, city = :c, state = :s, postal = :po, phone = :ph, email = :e',
       ExpressionAttributeValues: {
-        ':n': updatedUser.company
+        ':n': updatedUser.company,
+        ':a': updatedUser.address,
+        ':c': updatedUser.city,
+        ':s': updatedUser.state,
+        ':po': updatedUser.postal,
+        ':ph': updatedUser.phone,
+        ':e': updatedUser.email
       },
       Key: { "userId": updatedUser.userId}
     }).promise();
@@ -109,56 +120,21 @@ export class Db {
     return result.Items as Recipient[];
   }
 
-  // TODO added all recipient fields to update
   async updateRecipient(updatedRecipient: Recipient) {
     this.logger.info('update recipient', updatedRecipient.recipientId);
     return this.docClient.update({
       TableName: process.env.RECIPIENT_TABLE,
-      UpdateExpression: 'set company = :n',
+      UpdateExpression: 'set company = :n, address = :a, city = :c, state = :s, postal = :po, phone = :ph, email = :e',
       ExpressionAttributeValues: {
-        ':n': updatedRecipient.company
+        ':n': updatedRecipient.company,
+        ':a': updatedRecipient.address,
+        ':c': updatedRecipient.city,
+        ':s': updatedRecipient.state,
+        ':po': updatedRecipient.postal,
+        ':ph': updatedRecipient.phone,
+        ':e': updatedRecipient.email
       },
       Key: { "recipientId": updatedRecipient.recipientId}
     }).promise();
   }
-
-  // async save(todo: TodoItem) {
-  //   this.logger.info('save', todo);
-  //   return this.docClient.put({
-  //     TableName: process.env.TODOS_TABLE,
-  //     Item: todo
-  //   }).promise();
-  // }
-
-  // async update(updatedTodo: UpdateTodoRequest, userId: string, todoId: string) {
-  //   this.logger.info('update', userId, todoId);
-  //   return this.docClient.update({
-  //     TableName: process.env.TODOS_TABLE,
-  //     UpdateExpression: 'set done = :d',
-  //     ExpressionAttributeValues: {
-  //       ':d': updatedTodo.done
-  //     },
-  //     Key: { "userId": userId, "todoId": todoId}
-  //   }).promise();
-  // }
-
-  // async updateUrl(url: string, userId: string, todoId: string) {
-  //   this.logger.info('update', url, userId, todoId);
-  //   return this.docClient.update({
-  //     TableName: process.env.TODOS_TABLE,
-  //     UpdateExpression: 'set attachmentUrl = :u',
-  //     ExpressionAttributeValues: {
-  //       ':u': url
-  //     },
-  //     Key: { "userId": userId, "todoId": todoId}
-  //   }).promise();
-  // }
-
-  // async delete(userId: string, todoId: string) {
-  //   this.logger.info('delete', userId, todoId);
-  //   return this.docClient.delete({
-  //     TableName: process.env.TODOS_TABLE,
-  //     Key: { "userId": userId, "todoId": todoId}
-  //   }).promise();
-  // }
 }
