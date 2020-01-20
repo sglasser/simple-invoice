@@ -34,9 +34,10 @@
   let currentInvoice = null;
   let currentLineItem = null;
 
-  onMount(() => {
+  onMount(async () => {
     currentInvoice = params.invoiceId ? getInvoiceFromStore(params.invoiceId) : getEmptyInvoice();
     if (!$recipients.length) facade.getRecipients(); 
+    currentInvoice.invoiceNumber = await facade.getMaxInvoiceNumber();
   });
 
   // computed properties
@@ -44,7 +45,7 @@
     currentInvoice.lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2) :
     '';
   $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
-    `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.state} ${currentInvoice.recipient.postal}` :
+    `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.stateprov} ${currentInvoice.recipient.postal}` :
     ``;
 
   // functions
@@ -96,7 +97,7 @@
             </Row>
             <span class='text-black-50'>
               {$user.address}<br>
-              {$user.city}, {$user.state} {$user.postal}<br>
+              {$user.city}, {$user.stateprov} {$user.postal}<br>
               {$user.phone}<br>
               {$user.email}
             </span>
@@ -140,7 +141,7 @@
           </Col>
           <Col class='text-right'>
             <span class='text-primary font-weight-bold'>
-              Invoice: 1030
+              Invoice: {currentInvoice.invoiceNumber}
             </span>
             <br>
             January 11, 2020
@@ -207,9 +208,7 @@
   </div>
 {/if}
 <RecipientModal invoice={currentInvoice}></RecipientModal>
-<InvoicerModal
-  on:updateInvoicer={updateInvoicer}>
-</InvoicerModal>
+<InvoicerModal on:updateInvoicer={updateInvoicer}></InvoicerModal>
 <LineItemModal 
   on:updateLineItem={updateLineItem} 
   on:deleteLineItem={deleteLineItem} 

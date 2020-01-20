@@ -101,6 +101,27 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
 
+  GetMaxInvoiceNumber:
+    handler: src/lambda/http/get-max-invoice-number.handler
+    events:
+      - http:
+          method: get
+          path: max-invoice-number
+          cors: true
+          # authorizer: Auth
+          # reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Get max invoice number used for a user
+            description: Get max invoice number used for a user
+            #requestModels:
+              #'application/json': CreateRequest
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
+
   UpdateInvoice:
     handler: src/lambda/http/update-invoice.handler
     events:
@@ -269,11 +290,22 @@ resources:
             AttributeType: S
           - AttributeName: invoiceId
             AttributeType: S
+          - AttributeName: invoiceNumber
+            AttributeType: N
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
           - AttributeName: invoiceId
             KeyType: RANGE
+        LocalSecondaryIndexes:
+          - IndexName: MaxInvIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: invoiceNumber
+                KeyType: RANGE
+              Projection:
+                ProjectType: KEYS_ONLY
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.INVOICE_TABLE}
 

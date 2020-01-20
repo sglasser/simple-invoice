@@ -43,6 +43,20 @@ export class Db {
     return result.Items as Invoice[];
   }
 
+  async getMaxInvoiceNumber(userId): Promise<number> {
+    // https://www.dynamodbguide.com/local-secondary-indexes
+    this.logger.info('getMaxInvoiceNumber', userId);
+    const result = await this.docClient.query({
+      TableName: process.env.INVOICE_TABLE,
+      KeyConditionExpression: 'userId = :u',
+      ExpressionAttributeValues: {
+        ':u' : userId
+      },
+      ScanIndexForward: false
+    }).promise();
+    return result.Items[0];
+  }
+
   async updateInvoice(updatedInvoice: Invoice) {
     this.logger.info('update invoice', updatedInvoice.invoiceId);
     return this.docClient.update({
@@ -86,12 +100,12 @@ export class Db {
     this.logger.info('update user', updatedUser.userId);
     return this.docClient.update({
       TableName: process.env.USER_TABLE,
-      UpdateExpression: 'set company = :n, address = :a, city = :c, state = :s, postal = :po, phone = :ph, email = :e',
+      UpdateExpression: 'set company = :n, address = :a, city = :c, stateprov = :s, postal = :po, phone = :ph, email = :e',
       ExpressionAttributeValues: {
         ':n': updatedUser.company,
         ':a': updatedUser.address,
         ':c': updatedUser.city,
-        ':s': updatedUser.state,
+        ':s': updatedUser.stateprov,
         ':po': updatedUser.postal,
         ':ph': updatedUser.phone,
         ':e': updatedUser.email
@@ -124,12 +138,12 @@ export class Db {
     this.logger.info('update recipient', updatedRecipient.recipientId);
     return this.docClient.update({
       TableName: process.env.RECIPIENT_TABLE,
-      UpdateExpression: 'set company = :n, address = :a, city = :c, state = :s, postal = :po, phone = :ph, email = :e',
+      UpdateExpression: 'set company = :n, address = :a, city = :c, stateprov = :s, postal = :po, phone = :ph, email = :e',
       ExpressionAttributeValues: {
         ':n': updatedRecipient.company,
         ':a': updatedRecipient.address,
         ':c': updatedRecipient.city,
-        ':s': updatedRecipient.state,
+        ':s': updatedRecipient.stateprov,
         ':po': updatedRecipient.postal,
         ':ph': updatedRecipient.phone,
         ':e': updatedRecipient.email

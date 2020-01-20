@@ -11,7 +11,6 @@
 	import { onMount } from 'svelte';
 
 	// TODO remove, temp for dev work
-	// https://flaviocopes.com/svelte-export-from-component/
 	user.set({
 		isAuthenticated: true,
 		userId: '1234',
@@ -20,7 +19,7 @@
 		company: 'Sierra Golf Software',
 		address: '9169 Coral Sea St',
 		city: 'Blaine',
-		state: 'MN',
+		stateprov: 'MN',
 		postal: '55449',
 		phone: '763-218-2571',
 		email: 'steve@steveglasser.com'
@@ -31,30 +30,25 @@
 	if (/access_token|id_token|error/.test(locationHash)) {
 		Auth.handleAuthentication(locationHash);
 	}
-
-	onMount(() => {
-
-	})
 	
-	function login () {
+	const login =  () =>  {
 		Auth.login();
 	}
 </script>
 
-
-	{#if $loading}
-		<Overlay></Overlay>
-	{/if}
-	{#if $user.isAuthenticated}
-		<Toast></Toast>
-		<Nav></Nav>
-		<div class='app'>
-			<Router {routes}/>
-		</div>
-		<!-- <Footer></Footer> -->
-	{:else}
-		Please log in <button on:click={login}>Login In</button>
-	{/if}
+{#if $loading}
+  <Overlay></Overlay>
+{/if}
+{#if $user.isAuthenticated}
+  <Toast></Toast>
+  <Nav></Nav>
+  <div class='app'>
+    <Router {routes}/>
+  </div>
+  <!-- <Footer></Footer> -->
+{:else}
+  Please log in <button on:click={login}>Login In</button>
+{/if}
 
 <style>
 	.app {

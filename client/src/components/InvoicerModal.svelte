@@ -50,7 +50,7 @@
         </FormGroup>
         <FormGroup>
           <Input
-            bind:value={$user.state}
+            bind:value={$user.stateprov}
             placeholder="Company State/Province" 
             class='form-control-sm'
           />

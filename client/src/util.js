@@ -26,7 +26,7 @@ export function getEmptyInvoice() {
       company: '',
       address: '',
       city: '',
-      state: '',
+      stateprov: '',
       postal: '',
       phone: '',
       email: ''

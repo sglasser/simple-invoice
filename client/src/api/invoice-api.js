@@ -46,3 +46,19 @@ export async function getInvoices(idToken) {
   const data = await result.json();
   return data;
 }
+
+export async function getMaxInvoiceNumber(idToken) {
+  const result = await fetch(
+    `${apiEndpoint}/max-invoice-number`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      }
+    }
+  );
+  const data = await result.json();
+  return data;
+
+}

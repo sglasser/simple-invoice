@@ -3,7 +3,7 @@ export interface User {
   company: string,
   address: string,
   city: string,
-  state: string,
+  stateprov: string,
   postal: string,
   phone: string,
   email: string,

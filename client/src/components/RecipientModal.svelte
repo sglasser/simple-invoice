@@ -44,7 +44,7 @@
       </FormGroup>
       <FormGroup>
         <Input
-          bind:value={recipient.state}
+          bind:value={recipient.stateprov}
           placeholder="Recipient State/Province" 
           class='form-control-sm'
         />
