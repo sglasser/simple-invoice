@@ -17,6 +17,7 @@
   import { searchCriteria } from '../stores.js';
   import facade from '../facade.js';
   import { push } from 'svelte-spa-router';
+  import * as moment from 'moment';
 
   const create = () => push('/invoice');
   const editInvoice = (id) => push(`/invoice/${id}`);
@@ -81,7 +82,10 @@
         </thead>
         <tbody>
           {#each $invoices as invoice, i}
-            <tr on:click={() => editInvoice(invoice.invoiceId)}>
+            <tr 
+              on:click={() => editInvoice(invoice.invoiceId)}
+              class:text-success='{invoice.paid}'
+            >
               <td>{invoice.invoiceNumber}</td>
               <td>{invoice.recipient.company}</td> 
               <td>{invoice.total}</td> 
