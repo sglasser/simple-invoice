@@ -20,7 +20,7 @@ export function getEmptyInvoice() {
   const now = moment();
   return {     
     invoiceId: null, 
-    invoiceNumber: 1,
+    invoiceNumber: '',
     recipient: {
       recipientId: '',
       company: '',

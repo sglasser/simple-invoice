@@ -31,7 +31,7 @@ class AppFacade {
     try {
       loading.set(true);
       const result = await getMaxInvoiceNumber(get(user).userId);
-      return result;
+      return parseInt(result) + 1;
     } catch (err) {
       console.log(err);
       stickyToast('danger', 'Error', 'Error occured while retrieving invoice data. Please try again later');
@@ -60,7 +60,7 @@ class AppFacade {
       loading.set(true);
       const result = await createRecipient(recipient, get(user).userId);
       recipients.update(values => [...values, recipient]);
-      toast('success', this.TOAST_DISPLAY_LENGTH, 'Recipient was successfully saved.');
+      toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Recipient was successfully saved.');
     } catch (err) {
       console.log(err);
       stickyToast('danger', 'Error', 'Error occured while saving recipient. Please try again later.');

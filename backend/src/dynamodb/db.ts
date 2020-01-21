@@ -43,7 +43,7 @@ export class Db {
     return result.Items as Invoice[];
   }
 
-  async getMaxInvoiceNumber(userId): Promise<number> {
+  async getMaxInvoiceNumber(userId): Promise<Invoice> {
     // https://www.dynamodbguide.com/local-secondary-indexes
     this.logger.info('getMaxInvoiceNumber', userId);
     const result = await this.docClient.query({
@@ -54,6 +54,7 @@ export class Db {
       },
       ScanIndexForward: false
     }).promise();
+    this.logger.info('getMaxInvoiceNumber', JSON.stringify(result))
     return result.Items[0];
   }
 

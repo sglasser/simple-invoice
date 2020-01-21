@@ -59,6 +59,7 @@ export async function getMaxInvoiceNumber(idToken) {
     }
   );
   const data = await result.json();
+  console.log('getMaxInvoiceNumber', data)
   return data;
 
 }

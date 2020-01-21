@@ -8,9 +8,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   // const userId = getUserId(event);
   const userId = '1234';
 
-  const maxInvoiceNumber = await Db.getInstance().getMaxInvoiceNumber(userId);
+  const maxInvoice = await Db.getInstance().getMaxInvoiceNumber(userId);
 
-  logger.info('Retreived all invoices for user', userId);
+  logger.info('Retrieved max invoice number', userId);
 
   return {
     statusCode: 200,
@@ -18,6 +18,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': true
     },
-    body: JSON.stringify(maxInvoiceNumber)
+    body: maxInvoice ? JSON.stringify(maxInvoice.invoiceNumber) : JSON.stringify(1000)
   };
 }
