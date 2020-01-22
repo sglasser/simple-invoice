@@ -17,6 +17,9 @@ custom:
         version: v1.0.0
         title: Simple Invoice API
         description: Simple invoicing application
+  apigwBinary:
+    types:
+      - '*/*'
 
 plugins:
   - serverless-webpack
@@ -268,6 +271,14 @@ functions:
         Action:
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECIPIENT_TABLE}
+
+  CreatePDF:
+    handler: src/lambda/http/create-invoice-pdf.handler
+    events:
+      - http:
+          method: post
+          path: invoice/pdf
+          cors: true
           
 resources:
   Resources:

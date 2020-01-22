@@ -17,11 +17,14 @@
   import { searchCriteria } from '../stores.js';
   import facade from '../facade.js';
   import { push } from 'svelte-spa-router';
-  import * as moment from 'moment';
+  import moment from 'moment';
 
   const create = () => push('/invoice');
   const editInvoice = (id) => push(`/invoice/${id}`);
   const refresh = () => facade.loadInvoices();
+  const isOverDue = (invoice) => moment().isAfter(moment(invoice.due));
+  const formatDate = (date) => moment(date).format('MM/DD/YYYY');
+  
 </script>
 
 <Card>
@@ -85,12 +88,13 @@
             <tr 
               on:click={() => editInvoice(invoice.invoiceId)}
               class:text-success='{invoice.paid}'
+              class:text-danger={isOverDue(invoice)}
             >
               <td>{invoice.invoiceNumber}</td>
               <td>{invoice.recipient.company}</td> 
               <td>{invoice.total}</td> 
-              <td>{invoice.created}</td>
-              <td>{invoice.due}</td>  
+              <td>{formatDate(invoice.created)}</td>
+              <td>{formatDate(invoice.due)}</td>  
             </tr>
           {/each}
         </tbody>

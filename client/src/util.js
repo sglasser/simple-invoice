@@ -33,7 +33,7 @@ export function getEmptyInvoice() {
     },
     lineItems: [
     ],
-    created: now.format('MM/DD/YYYY'),
+    created: now.format('YYYY-MM-DD'),
     year: now.format('YYYY'),
     month: now.format('MM'),
     due: now.add(30, 'days').format('MM/DD/YYYY'),

@@ -27,6 +27,7 @@
     Row,
     Input
   } from "sveltestrap";
+  import moment from 'moment';
 
   // for route params
   export let params = {}
@@ -47,7 +48,6 @@
   $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
     `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.stateprov} ${currentInvoice.recipient.postal}` :
     ``;
-
   // functions
   const setInvoiceDirty = () => isInvoiceDirty.set(true);
   const showRecipientModal = () => displayRecipientModal.set(true);
@@ -74,11 +74,18 @@
   const updateInvoicer = (event) => {
     facade.upsertInvoicer(event.detail);
   }
-  const save = () => facade.upsertInvoice(currentInvoice);
+  const save = () => {
+    // if due date has been changed
+    const dueDate = moment(currentInvoice.due);
+    currentInvoice.dueYear = dueDate.format('YYYY');
+    currentInvoice.dueMonth = dueDate.format('MM');
+    facade.upsertInvoice(currentInvoice);
+  }
   const markPaid = () => {
     currentInvoice.paid = true;
     facade.upsertInvoice(currentInvoice);
   }
+  const print = () => facade.createInvoicePdf(currentInvoice);
 </script>
 
 {#if currentInvoice}
@@ -221,6 +228,11 @@
       <div class="col">
         <div class="btn btn-secondary" on:click={markPaid}>
           Mark Paid
+        </div>
+      </div>
+      <div class="col">
+        <div class='btn btn-info btn-outline' on:click={print}>
+          Print PDF
         </div>
       </div>
     </div>
