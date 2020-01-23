@@ -271,14 +271,6 @@ functions:
         Action:
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECIPIENT_TABLE}
-
-  CreatePDF:
-    handler: src/lambda/http/create-invoice-pdf.handler
-    events:
-      - http:
-          method: post
-          path: invoice/pdf
-          cors: true
           
 resources:
   Resources:
