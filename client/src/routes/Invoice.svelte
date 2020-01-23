@@ -12,6 +12,7 @@
   import { isInvoiceDirty } from '../stores.js';
   import { uuid } from 'uuidv4';
   import { getInvoiceFromStore, getEmptyInvoice, getEmptyLineItem } from '../util.js';
+  import { push } from 'svelte-spa-router';
   import {
     Button,
     CustomInput,
@@ -85,7 +86,7 @@
     currentInvoice.paid = true;
     facade.upsertInvoice(currentInvoice);
   }
-  const print = () => facade.createInvoicePdf(currentInvoice);
+  const print = () => push(`/pdf/${currentInvoice.invoiceId}`);
 </script>
 
 {#if currentInvoice}
