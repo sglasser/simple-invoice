@@ -10,11 +10,11 @@ export function getYears() {
     years.push(currentYear - i);
   }
   return years;
-}
+};
 
 export function getInvoiceFromStore(invoiceId) {
   return get(invoices).find(invoice => invoice.invoiceId === invoiceId);
-}
+};
 
 export function getEmptyInvoice() {
   const now = moment();
@@ -41,7 +41,7 @@ export function getEmptyInvoice() {
     dueMonth: now.add(30, 'days').format('MM'),
     paid: false,
   };
-}
+};
 
 export function getEmptyLineItem() {
   return {
@@ -51,4 +51,8 @@ export function getEmptyLineItem() {
     price: '',
     total: ''
   };
+};
+
+export function total(lineItems) {
+  return lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2)
 };
