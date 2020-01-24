@@ -8,6 +8,7 @@
   import { user } from '../stores.js';
   import { get } from 'svelte/store';
   import { total } from '../util.js';
+  import { formatCurrency } from '../util.js';
 
   // for route params
   export let params = {};
@@ -36,14 +37,35 @@
 
   const generateCustomerInformation = (doc, invoice) => {
     doc
-      .text(`Invoice Number: ${invoice.invoiceNumber}`, 50, 200)
-      .text(`Invoice Date: ${invoice.created}`, 50, 215)
-      .text(`Balance Due: ${total(invoice.lineItems)}`, 50, 130)
+      .fillColor("#444444")
+      .fontSize(20)
+      .text("Invoice", 50, 160);
 
-      .text(invoice.recipient.company, 300, 200)
-      .text(invoice.recipient.address, 300, 215)
-      .text(`${invoice.recipient.city}, ${invoice.recipient.stateprov} ${invoice.recipient.postal}`, 300, 130)
+    generateHr(doc, 185);
+
+    generateHeader(doc, 185);
+
+    const customerInformationTop = 200;
+
+    doc
+      .fontSize(10)
+      .text(`Invoice Number:`, 50, customerInformationTop)
+      .font("Helvetica-Bold")
+      .text(invoice.invoiceNumber, 150, customerInformationTop)
+      .font("Helvetica")
+      .text(`Invoice Date:`, 50, customerInformationTop + 15)
+      .text(invoice.created, 150, customerInformationTop + 15)
+      .text(`Balance Due:`, 50, customerInformationTop + 30)
+      .text(formatCurrency(total(invoice.lineItems)), 150, customerInformationTop + 30)
+
+      .font('Helvetica-Bold')
+      .text(invoice.recipient.company, 325, customerInformationTop)
+      .font('Helvetica')
+      .text(invoice.recipient.address, 325, customerInformationTop + 15)
+      .text(`${invoice.recipient.city}, ${invoice.recipient.stateprov} ${invoice.recipient.postal}`, 325, customerInformationTop + 30)
       .moveDown();
+
+    generateHr(doc, 252)
   }
 
   const generateHeader = (doc) => {
@@ -53,14 +75,28 @@
       .fontSize(20)
       .text(invoicer.company, 110, 57)
       .fontSize(10)
+      .text(invoicer.company, 200, 50, {align: "right"})
       .text(invoicer.address, 200, 65, { align: "right" })
       .text(`${invoicer.city}, ${invoicer.stateprov} ${invoicer.postal}`, 200, 80, { align: "right" })
       .moveDown();
   }
 
   const generateInvoiceTable = (doc, invoice) => {
-    let i,
-      invoiceTableTop = 330;
+    let i;
+    const invoiceTableTop = 330;
+
+    doc.font('Helvetica-Bold');
+    generateTableRow(
+      doc,
+      invoiceTableTop,
+      'Item',
+      'Unit Price',
+      'Quantity',
+      'Line Total'
+    )
+
+    generateHr(doc, invoiceTableTop + 20);
+    doc.font("Helvetica");
 
     for (i = 0; i < invoice.lineItems.length; i++) {
       const item = invoice.lineItems[i];
@@ -71,18 +107,30 @@
         item.desc,
         item.price,
         item.qty,
-        item.total
+        formatCurrency(item.total)
       );
+      generateHr(doc, position + 20);
     }
+
+  const totalPosition = invoiceTableTop + (i + 1) * 30;
+    generateTableRow(
+      doc,
+      totalPosition,
+      "",
+      "",
+      "Total",
+      formatCurrency(total(invoice.lineItems)),
+    )
   }
 
-  function generateTableRow(doc, y, desc, price, qty, total) {
+  const generateTableRow = (doc, y, desc, price, qty, total) => {
     doc
       .fontSize(10)
       .text(desc, 50, y)
-      .text(price, 150, y)
-      .text(qty, 280, y, { width: 90, align: "right" })
-      .text(total, 370, y, { width: 90, align: "right" })
+      .text("", 150, y)
+      .text(price, 280, y, {width: 90, align: "right"})
+      .text(qty, 370, y, { width: 90, align: "right" })
+      .text(total, 0, y, {align: "right" })
       // .text(c5, 0, y, { align: "right" });
   }
 
@@ -92,9 +140,18 @@
       .text(
         `Payment is due ${invoice.due}. Thank you for your business.`,
         50,
-        780,
+        700,
         { align: "center", width: 500 }
     );
+  }
+
+  const generateHr = (doc, y) => {
+    doc
+      .strokeColor("#aaaaaa")
+      .lineWidth(1)
+      .moveTo(50, y)
+      .lineTo(550, y)
+      .stroke();
   }
 
   // http://pdfkit.org/

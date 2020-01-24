@@ -56,3 +56,7 @@ export function getEmptyLineItem() {
 export function total(lineItems) {
   return lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2)
 };
+
+export function formatCurrency (amount) {
+  return `$${amount}`;
+}
