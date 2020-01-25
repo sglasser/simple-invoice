@@ -22,7 +22,8 @@
 		stateprov: 'MN',
 		postal: '55449',
 		phone: '763-218-2571',
-		email: 'steve@steveglasser.com'
+		email: 'steve@steveglasser.com',
+		logoUrl: 'https://simple-invoice-user-logo-dev.s3.us-east-2.amazonaws.com/1234'
 	});
 	let toast;
 	// handle auth if access_token from Auth0 in url hash and navigate to home 

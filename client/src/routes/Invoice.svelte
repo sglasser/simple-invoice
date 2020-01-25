@@ -11,8 +11,9 @@
   import { recipients } from '../stores.js';
   import { isInvoiceDirty } from '../stores.js';
   import { uuid } from 'uuidv4';
-  import { getInvoiceFromStore, getEmptyInvoice, getEmptyLineItem } from '../util.js';
+  import { getInvoiceFromStore, getEmptyInvoice, getEmptyLineItem } from '../util/util.js';
   import { push } from 'svelte-spa-router';
+  import { createPdf } from '../util/pdf.js';
   import {
     Button,
     CustomInput,
@@ -86,7 +87,11 @@
     currentInvoice.paid = true;
     facade.upsertInvoice(currentInvoice);
   }
-  const print = () => push(`/pdf/${currentInvoice.invoiceId}`);
+  const print = () => createPdf(currentInvoice);
+  const handleLogo = (event) => {
+    const files = event.target.files;
+    facade.uploadLogo(files[0]);
+  }
 </script>
 
 {#if currentInvoice}
@@ -108,6 +113,21 @@
                   <h3>
                     {$user.company} 
                   </h3>
+                      <div class='clip-upload'>
+                       <label for="file-input">
+                        <i class="fa fa-paperclip fa-lg" aria-hidden="true"></i>
+                      </label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          placeholder="Upload logo"
+                          name='file-input'
+                          id='file-input'
+                          class='hide'
+                          on:change={handleLogo}
+                        />
+                      </div>
+               
                 </Col>
                 <Col>
                   <span on:click={showInvoicerModal}>
@@ -269,6 +289,10 @@
     background-image: url('/paid.png');
     background-repeat: no-repeat;
     background-position: center;
+  }
+
+  .hide {
+    display: none;
   }
 </style>
 

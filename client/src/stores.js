@@ -1,6 +1,6 @@
 import { writable, readable } from 'svelte/store';
 import moment from 'moment';
-import { getYears } from './util.js';
+import { getYears } from './util/util.js';
 
 export const invoices = writable([]);
 

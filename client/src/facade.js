@@ -4,9 +4,8 @@ import { get } from 'svelte/store';
 import { loading } from './stores.js';
 import { isInvoiceDirty } from './stores.js';
 import { createInvoice, getInvoices, updateInvoice, getMaxInvoiceNumber } from './api/invoice-api.js';
-import { createUser, updateUser } from './api/user-api.js';
+import { createUser, updateUser, getUploadUrl, uploadFile } from './api/user-api.js';
 import { getRecipients, createRecipient } from './api/recipient-api.js';
-import { createInvoicePdf } from './api/invoice-pdf-api';
 import { toast, stickyToast } from './components/Toast.svelte';
 import { uuid } from 'uuidv4';
 
@@ -110,21 +109,17 @@ class AppFacade {
     }
   }
 
-  async createInvoicePdf (invoice) {
-    // https://medium.com/@storrisi/how-to-show-a-pdf-stream-on-a-react-client-without-any-library-36220fee60cb
-    // https://github.com/eligrey/FileSaver.js
+  async uploadLogo (file) {
     try {
+      console.log('upload', file);
       loading.set(true);
-      const blob = await createInvoicePdf(invoice, get(user).userId);
-      // const file = new Blob(
-      //   data,
-      //   {type: 'application/pdf'}
-      // );
-      const fileUrl = URL.createObjectURL(blob);
-      window.open(fileUrl);
+      const upload = await getUploadUrl(get(user).userId);
+      console.log('upload url', upload.uploadUrl);
+      const result = await uploadFile(upload.uploadUrl, file);
+      console.log(result);
     } catch (err) {
       console.log(err);
-      stickyToast('danger', 'Error', 'Error occurred while generating pdf.');
+      stickyToast('danger', 'Error', 'Error occured while uploading your logo. Please try again later.');
     } finally {
       loading.set(false);
     }

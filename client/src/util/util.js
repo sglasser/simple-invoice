@@ -1,8 +1,8 @@
 import moment from 'moment';
 import { get } from 'svelte/store';
-import { invoices } from './stores.js';
+import { invoices } from '../stores.js';
 
-export function getYears() {
+export const getYears = () =>  {
   let years = [];
   const currentYear = moment().get('year');
   years.push(currentYear)
@@ -12,11 +12,11 @@ export function getYears() {
   return years;
 };
 
-export function getInvoiceFromStore(invoiceId) {
+export const getInvoiceFromStore = (invoiceId) => {
   return get(invoices).find(invoice => invoice.invoiceId === invoiceId);
 };
 
-export function getEmptyInvoice() {
+export const getEmptyInvoice = () => {
   const now = moment();
   return {     
     invoiceId: null, 
@@ -43,7 +43,7 @@ export function getEmptyInvoice() {
   };
 };
 
-export function getEmptyLineItem() {
+export const getEmptyLineItem = () => {
   return {
     lineItemId: null,
     qty: '',
@@ -53,10 +53,10 @@ export function getEmptyLineItem() {
   };
 };
 
-export function total(lineItems) {
+export const total = (lineItems) => {
   return lineItems.reduce((accumulator, lineItem) => accumulator + (lineItem.qty * lineItem.price), 0).toFixed(2)
 };
 
-export function formatCurrency (amount) {
+export const formatCurrency = (amount) => {
   return `$${amount}`;
 }

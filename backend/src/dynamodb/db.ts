@@ -115,6 +115,18 @@ export class Db {
     }).promise();
   }
 
+  async addUserLogoUrl(userId: string, url: string) {
+    this.logger.info('update user logo url');
+    return this.docClient.update({
+      TableName: process.env.USER_TABLE,
+      UpdateExpression: 'set logoUrl = :u',
+      ExpressionAttributeValues: {
+        ':u': url
+      },
+      Key: { "userId": userId}
+    }).promise();
+  }
+
   async createRecipient(recipient: Recipient) {
     this.logger.info('create recipient', recipient);
     return this.docClient.put({

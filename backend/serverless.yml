@@ -17,9 +17,6 @@ custom:
         version: v1.0.0
         title: Simple Invoice API
         description: Simple invoicing application
-  apigwBinary:
-    types:
-      - '*/*'
 
 plugins:
   - serverless-webpack
@@ -46,7 +43,9 @@ provider:
     INVOICE_TABLE: INVOICEV5-${self:provider.stage}
     USER_TABLE: USER-${self:provider.stage}
     RECIPIENT_TABLE: RECIPIENT-${self:provider.stage}
-    INVOICE_S3_BUCKET: simple-invoice-${self:provider.stage}
+    USER_LOGO_S3_BUCKET: simple-invoice-user-logo-${self:provider.stage}
+    USER_LOGO_DOWNLOAD_URL: https://${self:provider.environment.USER_LOGO_S3_BUCKET}.s3.${self:provider.region}.amazonaws.com/
+    SIGNED_URL_EXPIRATION: 300
 
   iamRoleStatements:
     - Effect: Allow
@@ -271,6 +270,26 @@ functions:
         Action:
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RECIPIENT_TABLE}
+
+  GenerateUploadUrl:
+    handler: src/lambda/http/generate-upload-url.handler
+    events:
+      - http:
+          method: get
+          path: user/logo
+          cors: true
+          #authorizer: Auth
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:GetObject
+        Resource: arn:aws:s3:::${self:provider.environment.USER_LOGO_S3_BUCKET}/*
           
 resources:
   Resources:
@@ -353,7 +372,7 @@ resources:
     AttachmentsBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:provider.environment.INVOICE_S3_BUCKET}
+        BucketName: ${self:provider.environment.USER_LOGO_S3_BUCKET}
         CorsConfiguration:
           CorsRules:
             -
@@ -381,5 +400,5 @@ resources:
               Principal: '*'
               Action: 
                 - 's3:GetObject'
-              Resource: 'arn:aws:s3:::${self:provider.environment.INVOICE_S3_BUCKET}/*'
+              Resource: 'arn:aws:s3:::${self:provider.environment.USER_LOGO_S3_BUCKET}/*'
         Bucket: !Ref AttachmentsBucket   
