@@ -50,6 +50,7 @@
   $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
     `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.stateprov} ${currentInvoice.recipient.postal}` :
     ``;
+  $: companyLogoURI = $user.logoUrl ? $user.logoUrl : 'logoPlaceholder.jpg';
   // functions
   const setInvoiceDirty = () => isInvoiceDirty.set(true);
   const showRecipientModal = () => displayRecipientModal.set(true);
@@ -104,139 +105,105 @@
       </div>
     </div>
     <div class='card' class:centered-img="{currentInvoice.paid}">
-      <div class='card-body card-top'>
-        <div class='banner container'>
-          <Row class='d-flex justify-content-between'>
-            <Col>
-              <Row>
-                <Col xs='auto'>
-                  <h3>
-                    {$user.company} 
-                  </h3>
-                      <div class='clip-upload'>
-                       <label for="file-input">
-                        <i class="fa fa-paperclip fa-lg" aria-hidden="true"></i>
-                      </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          placeholder="Upload logo"
-                          name='file-input'
-                          id='file-input'
-                          class='hide'
-                          on:change={handleLogo}
-                        />
-                      </div>
-               
-                </Col>
-                <Col>
-                  <span on:click={showInvoicerModal}>
-                    Edit
-                  </span> 
-                </Col>
-              </Row>
-              <span class='text-black-50'>
-                {$user.address}<br>
-                {$user.city}, {$user.stateprov} {$user.postal}<br>
-                {$user.phone}<br>
-                {$user.email}
+      <div class='card-body'>
+        <div class='container d-flex flex-column'>
+          <div class='d-flex justify-content-between align-items-center'>
+            <div class='d-flex align-items-center justify-content-between'>
+              <div>
+                <img src={companyLogoURI} width='100px' alt='company logo'>
+                <div class='clip-upload'>
+                  <label for="file-input">
+                    <i class="fas fa-file-upload"></i>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    placeholder="Upload logo"
+                    name='file-input'
+                    id='file-input'
+                    class='hide'
+                    on:change={handleLogo}
+                  />       
+                </div>
+              </div>
+              <div>
+                <h3>
+                  {$user.company} 
+                </h3>
+              </div>            
+            </div>
+            <div class='text-right'>
+              {$user.company}<br>
+              {$user.address}<br>
+              {$user.city}, {$user.stateprov} {$user.postal}<br>
+              <span on:click={showInvoicerModal}>
+                <i class="fas fa-user-edit"></i>
               </span>
-            </Col>
-            <Col class='pull-right'>
-              <Row>
-                <Col>
-                  <FormGroup>
-                    <select bind:value={currentInvoice.recipient} on:change={setInvoiceDirty} class='form-control form-control-sm'>
-                      <option value=''>Select Recipient</option>
-                      {#each $recipients as recipient}
-                        <option value={recipient}>
-                          <strong>{recipient.company}</strong>
-                        </option>
-                      {/each}
-                    </select>
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <span on:click={showRecipientModal}>Add</span>
-                </Col>
-              </Row>
-              <span class='text-black-50'>
-                {@html recipientAddress}
-              </span>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <hr>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <span class='text-black-50'>
-                INVOICE DUE:
-              </span>
+            </div>
+          </div>
+          <div class='mt-4'>
+            <h3>Invoice</h3>
+          </div>
+          <div>
+            <hr>
+          </div>
+          <div class='d-flex justify-content-between'>
+            <div>
+              Invoice Number: <strong>{currentInvoice.invoiceNumber}</strong><br>
+              Invoice Date: <input type='date' bind:value={currentInvoice.created} class='form-control-sm'><br>
+              Balance Due: ${currentInvoice.total}<br>
+              Due Date: <input type='date' bind:value={currentInvoice.due} class='form-control-sm'>
+            </div>
+            <div>
+              <select bind:value={currentInvoice.recipient} on:change={setInvoiceDirty} class='form-control-sm'>
+                <option value=''>Select Recipient</option>
+                {#each $recipients as recipient}
+                  <option value={recipient}>
+                    {recipient.company}
+                  </option>
+                {/each}
+              </select>
+              <i class="fas fa-user-plus"></i>
               <br>
-                <input type='date' bind:value={currentInvoice.due} class='form-control'>
-            </Col>
-            <Col class='text-right'>
-              <span class='text-primary font-weight-bold'>
-                Invoice: {currentInvoice.invoiceNumber}
-              </span>
-              <br>
-              {currentInvoice.created}
-            </Col>
-          </Row>
-          <Row>
-            <Col class='text-center bg-primary text-light'>
-              <span class='font-weight-bold'>
-                INVOICE
-              </span>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>QUANTITY</th>
-                    <th>DESCRIPTION</th>
-                    <th>UNIT PRICE</th>
-                    <th class='text-right'>TOTAL</th>
+              {@html recipientAddress}
+            </div>
+          </div>
+          <div>
+            <hr>
+          </div>
+          <div class='mt-4'>
+            <table class='table'>
+              <thead>
+                <tr class='border-top-hide'>
+                  <th>Item</th>
+                  <th class='text-right'>Unit Price</th>
+                  <th class='text-right'>Quantity</th>
+                  <th class='text-right'>Line Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each currentInvoice.lineItems as lineItem, i}
+                  <tr on:click={event => showLineItemModal(lineItem)} >
+                    <td>{lineItem.desc}</td> 
+                    <td class='text-right'>${lineItem.price}</td> 
+                    <td class='text-right'>{lineItem.qty}</td>
+                    <td class='text-right'>${lineItem.total}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {#each currentInvoice.lineItems as lineItem, i}
-                    <tr on:click={event => showLineItemModal(lineItem)} >
-                      <td>{lineItem.qty}</td>
-                      <td>{lineItem.desc}</td> 
-                      <td>${lineItem.price}</td> 
-                      <td class='text-right'>${lineItem.total}</td>
-                    </tr>
-                  {/each}
-                  <tr>
-                    <td colspan='4'>
-                      <Button secondary outline size='sm' on:click={event => showLineItemModal(null)}>Add Item</Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <hr>
-            </Col>
-          </Row>
-          <Row class='d-flex justify-content-between'>
-            <Col>
-              <span class='text-black-50'>
-                TOTAL
-              </span>
-            </Col>
-            <Col class='text-right text-primary font-weight-bold pr-2'>
-              ${currentInvoice.total}
-            </Col>
-          </Row>
+                {/each}
+                <tr class='border-bottom-hide'>
+                  <td></td>
+                  <td></td>
+                  <td class='text-right'>Total</td>
+                  <td class='text-right'>{currentInvoice.total}</td>
+                </tr>
+                <tr>
+                  <td colspan='4'>
+                    <Button secondary outline size='sm' on:click={event => showLineItemModal(null)}>Add Item</Button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -289,6 +256,14 @@
     background-image: url('/paid.png');
     background-repeat: no-repeat;
     background-position: center;
+  }
+
+  .border-top-hide {
+    border-top: hidden;
+  }
+
+  .border-bottom-hide {
+    border-bottom: hidden;
   }
 
   .hide {

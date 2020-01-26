@@ -100,7 +100,7 @@ class AppFacade {
       } else {
         await createUser(invoicer, invoicer.userId);
       }
-      toast('success', this.TOAST_DISPLAY_LENGTH, 'Your company info was successfully saved.')
+      toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Your company info was successfully saved.')
     } catch (err) {
       console.log(err);
       stickyToast('danger', 'Error', 'Error occured while saving your company info. Please try again later.');
