@@ -4,9 +4,11 @@
   import RecipientModal from '../components/RecipientModal.svelte';
   import InvoicerModal from '../components/InvoicerModal.svelte';
   import LineItemModal from '../components/LineItemModal.svelte';
+  import InvoiceDirtyModal from '../components/InvoiceDirtyModal.svelte';
   import { displayRecipientModal } from '../stores.js';
   import { displayInvoiceModal } from '../stores.js';
   import { displayLineItemModal } from '../stores.js';
+  import { displayInvoiceDirtyModal } from '../stores.js';
   import { user } from '../stores.js';
   import { recipients } from '../stores.js';
   import { isInvoiceDirty } from '../stores.js';
@@ -14,21 +16,6 @@
   import { getInvoiceFromStore, getEmptyInvoice, getEmptyLineItem } from '../util/util.js';
   import { push } from 'svelte-spa-router';
   import { createPdf } from '../util/pdf.js';
-  import {
-    Button,
-    CustomInput,
-    FormGroup,
-    Label,
-    Table,
-    Card,
-    CardHeader,
-    CardTitle,
-    CardBody,
-    Col,
-    Container,
-    Row,
-    Input
-  } from "sveltestrap";
   import moment from 'moment';
 
   // for route params
@@ -41,6 +28,8 @@
     currentInvoice = params.invoiceId ? getInvoiceFromStore(params.invoiceId) : getEmptyInvoice();
     if (!$recipients.length) facade.getRecipients(); 
     if (!currentInvoice.invoiceNumber) currentInvoice.invoiceNumber = await facade.getMaxInvoiceNumber();
+    // if this is a new invoice, set it dirty right away
+    if (!params.invoiceId) setInvoiceDirty();
   });
 
   // computed properties
@@ -51,8 +40,10 @@
     `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.stateprov} ${currentInvoice.recipient.postal}` :
     ``;
   $: companyLogoURI = $user.logoUrl ? $user.logoUrl : 'logoPlaceholder.jpg';
+
   // functions
   const setInvoiceDirty = () => isInvoiceDirty.set(true);
+  const setInvoiceNotDirty = () => isInvoiceDirty.set(false);
   const showRecipientModal = () => displayRecipientModal.set(true);
   const showInvoicerModal = () => displayInvoiceModal.set(true);
   const showLineItemModal = (lineItem) => {
@@ -83,6 +74,7 @@
     currentInvoice.dueYear = dueDate.format('YYYY');
     currentInvoice.dueMonth = dueDate.format('MM');
     facade.upsertInvoice(currentInvoice);
+    setInvoiceNotDirty();
   }
   const markPaid = () => {
     currentInvoice.paid = true;
@@ -93,15 +85,17 @@
     const files = event.target.files;
     facade.uploadLogo(files[0]);
   }
+  const navigateWithDirtyCheck = () => $isInvoiceDirty ? displayInvoiceDirtyModal.set(true) : push('#/invoices');
+  const cancelNavigation = (event) => { if (!event.detail) push('#/invoices') };
 </script>
 
 {#if currentInvoice}
   <div class='container'>
     <div class='row'>
       <div class="col">
-        <a href='#/invoices' class="btn btn-outline-secondary btn-spacing">
+        <div class="btn btn-outline-secondary btn-spacing" on:click={navigateWithDirtyCheck}>
          <i class="fas fa-arrow-left"></i> Invoices
-        </a>
+        </div>
       </div>
     </div>
     <div class='card' class:centered-img="{currentInvoice.paid}">
@@ -163,7 +157,9 @@
                   </option>
                 {/each}
               </select>
-              <i class="fas fa-user-plus"></i>
+              <span on:click={showRecipientModal}>
+                <i class="fas fa-user-plus"></i>
+              </span>
               <br>
               {@html recipientAddress}
             </div>
@@ -198,7 +194,7 @@
                 </tr>
                 <tr>
                   <td colspan='4'>
-                    <Button secondary outline size='sm' on:click={event => showLineItemModal(null)}>Add Item</Button>
+                    <div class='btn btn-secondary btn-sm btn-outline' on:click={event => showLineItemModal(null)}>Add Item</div>
                   </td>
                 </tr>
               </tbody>
@@ -233,6 +229,7 @@
   on:deleteLineItem={deleteLineItem} 
   lineItem={currentLineItem}>
 </LineItemModal>
+<InvoiceDirtyModal on:cancelNavigation={cancelNavigation}></InvoiceDirtyModal>
 
 <style>
   .banner {
