@@ -65,9 +65,7 @@
     currentInvoice.lineItems = currentInvoice.lineItems.filter(lineItem => lineItem.lineItemId != lineItemToDelete.lineItemId);
     setInvoiceDirty();
   }
-  const updateInvoicer = (event) => {
-    facade.upsertInvoicer(event.detail);
-  }
+  const updateInvoicer = (event) => facade.upsertInvoicer(event.detail);
   const save = () => {
     // if due date has been changed
     const dueDate = moment(currentInvoice.due);
@@ -103,9 +101,9 @@
         <div class='container d-flex flex-column'>
           <div class='d-flex justify-content-between align-items-center'>
             <div class='d-flex align-items-center justify-content-between'>
-              <div>
+              <div style='position: relative;'>
                 <img src={companyLogoURI} width='100px' alt='company logo'>
-                <div class='clip-upload'>
+                <div class='clip-upload' style='position: absolute; right: -25px; top: -10px;'>
                   <label for="file-input">
                     <i class="fas fa-file-upload"></i>
                   </label>
@@ -120,19 +118,19 @@
                   />       
                 </div>
               </div>
-              <div>
+              <div class='w-50'>
                 <h3>
                   {$user.company} 
                 </h3>
               </div>            
             </div>
-            <div class='text-right'>
+            <div class='text-right' style='position:relative;'>
+              <div on:click={showInvoicerModal} style='position: absolute; right: -25px; top: -10px;'>
+                <i class="fas fa-user-edit"></i>
+              </div>
               {$user.company}<br>
               {$user.address}<br>
               {$user.city}, {$user.stateprov} {$user.postal}<br>
-              <span on:click={showInvoicerModal}>
-                <i class="fas fa-user-edit"></i>
-              </span>
             </div>
           </div>
           <div class='mt-4'>
@@ -148,7 +146,10 @@
               Balance Due: ${currentInvoice.total}<br>
               Due Date: <input type='date' bind:value={currentInvoice.due} class='form-control-sm'>
             </div>
-            <div>
+            <div style='position: relative;'>
+              <div on:click={showRecipientModal} style='position: absolute; right: -25px; top: -10px;'>
+                <i class="fas fa-user-plus"></i>
+              </div>
               <select bind:value={currentInvoice.recipient} on:change={setInvoiceDirty} class='form-control-sm'>
                 <option value=''>Select Recipient</option>
                 {#each $recipients as recipient}
@@ -157,9 +158,6 @@
                   </option>
                 {/each}
               </select>
-              <span on:click={showRecipientModal}>
-                <i class="fas fa-user-plus"></i>
-              </span>
               <br>
               {@html recipientAddress}
             </div>
