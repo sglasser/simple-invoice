@@ -7,7 +7,7 @@ import { createLogger } from '../../utils/logger';
 const logger = createLogger('get-users');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-
+  logger.info('event', event)
   // const userId = getUserId(event);
   const userId = '1234';
 

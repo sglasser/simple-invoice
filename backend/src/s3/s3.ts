@@ -24,8 +24,6 @@ export class S3Client {
 
   getUploadUrl(userId: string): string {
     this.logger.info('creating s3 upload url');
-    console.log('userId', userId);
-    console.log('bucket', process.env.USER_LOGO_S3_BUCKET);
     return this.s3.getSignedUrl('putObject', {
       Bucket: `${process.env.USER_LOGO_S3_BUCKET}`,
       Key: userId,
