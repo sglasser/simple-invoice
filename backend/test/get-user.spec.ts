@@ -1,21 +1,7 @@
 import { promisify } from 'util';
 import { handler } from '../src/lambda/http/get-user';
+import { event } from './eventHttpApiGateway';
 
-const event = {
-  body: '',
-  httpMethod: '',
-  path: '',
-  pathParameters: {},
-  headers: {},
-  multiValueHeaders: {},
-  isBase64Encoded: false,
-  multiValueQueryStringParameters: {},
-  queryStringParameters: {},
-  stageVariables: {},
-  requestContext: {},
-  resource: ''
-
-}
 
 const handlerPromise = promisify(handler);
 

@@ -3,7 +3,6 @@
 	import routes from './routes.js';
 	import Auth from './auth/auth.js';
 	import Nav from './components/Nav.svelte';
-	import Footer from './components/Footer.svelte';
 	import Overlay from './components/Overlay.svelte';
 	import Toast from './components/Toast.svelte';
 	import { user } from './stores.js';
@@ -42,11 +41,10 @@
 {/if}
 {#if $user.isAuthenticated}
   <Toast></Toast>
-  <Nav></Nav>
-  <div class='app'>
+  <!--Nav></Nav-->
+  <div class='app container'>
     <Router {routes}/>
   </div>
-  <!-- <Footer></Footer> -->
 {:else}
   Please log in <button on:click={login}>Login In</button>
 {/if}
