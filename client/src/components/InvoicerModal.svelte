@@ -12,7 +12,6 @@
     import { displayInvoiceModal } from '../stores.js';
     import { createEventDispatcher } from "svelte";
     import { user } from '../stores.js';
-    import facade from '../facade.js';
 
     const dispatch = createEventDispatcher();
 
@@ -22,54 +21,69 @@
     }
     const toggle = () => (displayInvoiceModal.set(false));
   </script>
-  
-  <Modal isOpen={$displayInvoiceModal} {toggle}>
-    <ModalHeader {toggle}>My Company Info</ModalHeader>
-    <ModalBody>
-      <Form>
-        <FormGroup>
-          <Input
-            bind:value={$user.company}
-            placeholder="Company Name" 
-            class='form-control-sm'
-          />
-        </FormGroup>
-        <FormGroup>
-          <Input
-            bind:value={$user.address}
-            placeholder="Company Address" 
-            class='form-control-sm'
-          />
-        </FormGroup>
-        <FormGroup>
-          <Input
-            bind:value={$user.city}
-            placeholder="Company City" 
-            class='form-control-sm'
-          />
-        </FormGroup>
-        <FormGroup>
-          <Input
-            bind:value={$user.stateprov}
-            placeholder="Company State/Province" 
-            class='form-control-sm'
-          />
-        </FormGroup>
-        <FormGroup>
-          <Input
-            bind:value={$user.postal}
-            placeholder="Company Postal" 
-            class='form-control-sm'
-          />
-        </FormGroup>
-      </Form>
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" on:click={save}>
-        Save
-      </Button>
-      <Button color="secondary" on:click={toggle}>
-        Cancel
-      </Button>
-    </ModalFooter>
-  </Modal>
+  <form on:submit|preventDefault={save}>
+    <Modal isOpen={$displayInvoiceModal} {toggle}>
+      <ModalHeader {toggle}>My Company Info</ModalHeader>
+      <ModalBody>
+          <div class='form-group'>
+            <input
+              bind:value={$user.company}
+              placeholder="Company Name" 
+              class='form-control form-control-sm'
+              name='company'
+              required
+            />
+          </div>
+          <div class='form-group'>
+            <input
+              bind:value={$user.address}
+              placeholder="Company Address" 
+              class='form-control form-control-sm'
+              name='address'
+              type='text'
+              required
+            />
+          </div>
+          <div class='form-group'>
+            <input
+              bind:value={$user.city}
+              placeholder="Company City" 
+              class='form-control form-control-sm'
+              name='city'
+              type='text'
+              required
+            />
+          </div>
+          <div class='form-group'>
+            <input
+              bind:value={$user.stateprov}
+              placeholder="Company State/Province" 
+              class='form-control form-control-sm'
+              name='state'
+              type='text'
+              required
+            />
+          </div>
+          <div class='form-group'>
+            <input
+              bind:value={$user.postal}
+              placeholder="Company Postal" 
+              class='form-control form-control-sm'
+              name='postal'
+              type='text'
+              required
+            />
+          </div>
+      </ModalBody>
+      <ModalFooter>
+        <button type='submit' class='btn btn-primary'>
+          Save
+        </button>
+        <button 
+          class='btn btn-secondary' 
+          on:click={toggle}>
+          Cancel
+        </button>
+      </ModalFooter>
+    </Modal>
+  </form>

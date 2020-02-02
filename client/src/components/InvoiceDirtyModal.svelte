@@ -4,15 +4,11 @@
       Modal,
       ModalBody,
       ModalFooter,
-      ModalHeader,
-      Input,
-      FormGroup,
-      Form
+      ModalHeader
     } from "sveltestrap";
     import { displayInvoiceDirtyModal } from '../stores.js';
     import { createEventDispatcher } from "svelte";
     import { user } from '../stores.js';
-    import facade from '../facade.js';
 
     const dispatch = createEventDispatcher();
 
@@ -29,11 +25,11 @@
         Changes have been made to this invoice. Do you want to navigate away without saving changes?
     </ModalBody>
     <ModalFooter>
-      <Button color='danger' on:click={() => cancelNavigation(false)}>
+      <div class='btn btn-danger' on:click={() => cancelNavigation(false)}>
         Yes
-      </Button>
-      <Button color="primary" on:click={() => cancelNavigation(true)}>
+      </div>
+      <div class='btn btn-primary' on:click={() => cancelNavigation(true)}>
         No
-      </Button>
+      </div>
     </ModalFooter>
   </Modal>

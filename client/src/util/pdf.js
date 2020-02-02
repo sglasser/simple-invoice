@@ -58,7 +58,7 @@ const generateHeader = async (doc) => {
 
   if (invoicer.logoUrl) {
     try {
-      const dataUri = await getDataUri(invoicer.logoUrl);
+      const dataUri = await getDataUri(invoicer.logoUrl + '?time=' + new Date());
       doc.image(dataUri, 50, 45, { width: 50 });
     } catch (err) {
       // still create the invoice 
@@ -154,7 +154,7 @@ const getDataUri = (url) => {
   return new Promise ((resolve, reject) => {
     var image = new Image();
 
-    image.crossOrigin = 'anonymous'
+    image.crossOrigin = 'Anonymous'
     image.onload = function () {
       var canvas = document.createElement('canvas');
       canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size

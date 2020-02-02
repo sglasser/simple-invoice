@@ -1,11 +1,11 @@
-import Home from './routes/Home.svelte';
+import Invoices from './routes/Invoices.svelte';
 import Invoice from './routes/Invoice.svelte';
 
 const routes = {
-  '/': Home,
+  '/': Invoices,
   '/invoice/:invoiceId': Invoice,
   '/invoice': Invoice,
-  '*': Home
+  '*': Invoices
 };
 
 export default routes;

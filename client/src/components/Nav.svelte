@@ -1,44 +1,27 @@
 <script>
-  import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Button
-  } from 'sveltestrap';
-  import { push } from 'svelte-spa-router';
   import { auth } from '../stores.js';
   import Auth from '../auth/auth.js';
 
   $: loginBtnText = $auth.isAuthenticated ? 'Sign Out' : 'Sign In';
   $: loginBtnAction = $auth.isAuthenticated ? login : logout;
-  let isOpen = false;
 
   const login = () => Auth.login();
   const logout = () => Auth.logout();
-  const handleUpdate = (event) => event.detail.isOpen;
 </script>
 
-<Navbar color="light" light expand="md">
-  <NavbarBrand href="/">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">
     <img src='/logo.png' width='130px' alt='Simple Invoice logo'/>
-  </NavbarBrand>
-  <NavbarToggler on:click={() => (isOpen = !isOpen)} />
-  <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
-    <Nav class="ml-auto" navbar>
-      <NavItem>
-        <NavLink href="#components/">Settings</NavLink>
-      </NavItem>
-      <NavItem>
-        <Button outline primary on:click={loginBtnAction}>{loginBtnText}</Button>
-      </NavItem>
-    </Nav>
-  </Collapse>
-</Navbar>
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success my-2 my-sm-0" on:click={loginBtnAction}>{loginBtnText}</button>
+    </form>
+  </div>
+</nav>

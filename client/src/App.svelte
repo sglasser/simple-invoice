@@ -22,18 +22,14 @@
 		postal: '55449',
 		phone: '763-218-2571',
 		email: 'steve@steveglasser.com',
-		// logoUrl: 'https://simple-invoice-user-logo-dev.s3.us-east-2.amazonaws.com/1234'
+		logoUrl: 'https://simple-invoice-user-logo-dev.s3.us-east-2.amazonaws.com/1234'
 	});
 	let toast;
 	// handle auth if access_token from Auth0 in url hash and navigate to home 
 	const locationHash = window.location.hash;
-	if (/access_token|id_token|error/.test(locationHash)) {
-		Auth.handleAuthentication(locationHash);
-	}
+	if (/access_token|id_token|error/.test(locationHash)) Auth.handleAuthentication(locationHash);
 	
-	const login =  () =>  {
-		Auth.login();
-	}
+	const login = () => Auth.login();
 </script>
 
 {#if $loading}
@@ -41,17 +37,19 @@
 {/if}
 {#if $user.isAuthenticated}
   <Toast></Toast>
-  <!--Nav></Nav-->
-  <div class='app container'>
+  <Nav></Nav>
+  <div class='app container mx-auto'>
     <Router {routes}/>
   </div>
 {:else}
-  Please log in <button on:click={login}>Login In</button>
+	<Nav></Nav>
+	<div class='container mx-auto'>
+		Please log in <button on:click={login}>Login In</button>
+	</div>
 {/if}
 
 <style>
 	.app {
 		margin: 2em;
-		height: 100%;
 	}
 </style>

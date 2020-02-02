@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import facade from '../facade.js';
+  import UIFacade from '../ui-facade.js';
   import RecipientModal from '../components/RecipientModal.svelte';
   import InvoicerModal from '../components/InvoicerModal.svelte';
   import LineItemModal from '../components/LineItemModal.svelte';
@@ -26,8 +26,8 @@
 
   onMount(async () => {
     currentInvoice = params.invoiceId ? getInvoiceFromStore(params.invoiceId) : getEmptyInvoice();
-    if (!$recipients.length) facade.getRecipients(); 
-    if (!currentInvoice.invoiceNumber) currentInvoice.invoiceNumber = await facade.getMaxInvoiceNumber();
+    if (!$recipients.length) UIFacade.getRecipients(); 
+    if (!currentInvoice.invoiceNumber) currentInvoice.invoiceNumber = await UIFacade.getMaxInvoiceNumber();
     // if this is a new invoice, set it dirty right away
     if (!params.invoiceId) setInvoiceDirty();
   });
@@ -62,26 +62,26 @@
   }
   const deleteLineItem = (event) => {
     const lineItemToDelete = event.detail;
-    currentInvoice.lineItems = currentInvoice.lineItems.filter(lineItem => lineItem.lineItemId != lineItemToDelete.lineItemId);
+    currentInvoice.lineItems = currentInvoice.lineItems.filter(lineItem => lineItem.lineItemId !== lineItemToDelete.lineItemId);
     setInvoiceDirty();
   }
-  const updateInvoicer = (event) => facade.upsertInvoicer(event.detail);
+  const updateInvoicer = (event) => UIFacade.upsertInvoicer(event.detail);
   const save = () => {
     // if due date has been changed
     const dueDate = moment(currentInvoice.due);
     currentInvoice.dueYear = dueDate.format('YYYY');
     currentInvoice.dueMonth = dueDate.format('MM');
-    facade.upsertInvoice(currentInvoice);
+    UIFacade.upsertInvoice(currentInvoice);
     setInvoiceNotDirty();
   }
   const markPaid = () => {
     currentInvoice.paid = true;
-    facade.upsertInvoice(currentInvoice);
+    UIFacade.upsertInvoice(currentInvoice);
   }
   const print = () => createPdf(currentInvoice);
   const handleLogo = (event) => {
     const files = event.target.files;
-    facade.uploadLogo(files[0]);
+    UIFacade.uploadLogo(files[0]);
   }
   const navigateWithDirtyCheck = () => $isInvoiceDirty ? displayInvoiceDirtyModal.set(true) : push('#/invoices');
   const cancelNavigation = (event) => { if (!event.detail) push('#/invoices') };
@@ -142,9 +142,9 @@
           <div class='d-flex justify-content-between'>
             <div>
               Invoice Number: <strong>{currentInvoice.invoiceNumber}</strong><br>
-              Invoice Date: <input type='date' bind:value={currentInvoice.created} class='form-control-sm'><br>
+              Invoice Date: <input type='date' bind:value={currentInvoice.created} on:change={setInvoiceDirty} class='form-control-sm'><br>
               Balance Due: ${currentInvoice.total}<br>
-              Due Date: <input type='date' bind:value={currentInvoice.due} class='form-control-sm'>
+              Due Date: <input type='date' bind:value={currentInvoice.due} on:change={setInvoiceDirty} class='form-control-sm'>
             </div>
             <div style='position: relative;'>
               <div on:click={showRecipientModal} style='position: absolute; right: -25px; top: -10px;'>
@@ -176,7 +176,7 @@
                 </tr>
               </thead>
               <tbody>
-                {#each currentInvoice.lineItems as lineItem, i}
+                {#each currentInvoice.lineItems as lineItem, i (lineItem.lineItemId)}
                   <tr on:click={event => showLineItemModal(lineItem)} >
                     <td>{lineItem.desc}</td> 
                     <td class='text-right'>${lineItem.price}</td> 

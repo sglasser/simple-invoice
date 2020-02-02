@@ -10,11 +10,11 @@
     } from "sveltestrap";
     import { displayRecipientModal } from '../stores.js';
     import { user } from '../stores.js';
-    import facade from '../facade.js';
+    import UIFacade from '../ui-facade.js';
 
     let recipient = {}
 
-    const save = () => facade.createRecipient(recipient) ? toggle() : false;
+    const save = () => UIFacade.createRecipient(recipient) ? toggle() : false;
     const toggle = () => (displayRecipientModal.set(false));
   </script>
   

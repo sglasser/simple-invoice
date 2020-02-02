@@ -10,7 +10,6 @@
   } from "sveltestrap";
   import { createEventDispatcher } from "svelte";
   import { displayLineItemModal } from "../stores.js";
-  import facade from "../facade.js";
 
   export let lineItem = {};
 
@@ -19,12 +18,14 @@
   $: total = lineItem ? (lineItem.qty * lineItem.price).toFixed(2) : 0;
 
   const save = () => {
+    console.log('save')
     lineItem.total = total;
     dispatch("updateLineItem", lineItem);
     toggle();
   };
 
   const del = () => {
+    console.log('delete')
     dispatch("deleteLineItem", lineItem);
     toggle();
   }
@@ -33,43 +34,48 @@
   
   const toggle = () => displayLineItemModal.set(false);
 </script>
-
-<Modal isOpen={$displayLineItemModal} {toggle}>
-  <ModalHeader {toggle}>Line Item</ModalHeader>
-  <ModalBody>
-    <FormGroup>
-      <Input
-        bind:value={lineItem.qty}
-        placeholder="Quantity"
-        class="form-control-sm" />
-    </FormGroup>
-    <FormGroup>
-      <Input
-        bind:value={lineItem.desc}
-        placeholder="Description"
-        class="form-control-sm" />
-    </FormGroup>
-    <FormGroup>
-      <Input
-        bind:value={lineItem.price}
-        placeholder="Price"
-        class="form-control-sm" />
-    </FormGroup>
-    <FormGroup>
-      <Input
-        readonly
-        bind:value={total}
-        placeholder="Total"
-        class="form-control-sm" />
-    </FormGroup>
-  </ModalBody>
-  <ModalFooter>
-    {#if lineItem.lineItemId}
-      <Button color='danger' outline class='justify-start' on:click={del} style='margin-right:auto;'>Delete</Button>
-    {/if}
-    <Button color="primary" outline on:click={save}>Save</Button>
-    <Button color="secondary" outline on:click={toggle}>Cancel</Button>
-  </ModalFooter>
-</Modal>
+<form on:submit|preventDefault={save}>
+  <Modal isOpen={$displayLineItemModal} {toggle}>
+    <ModalHeader {toggle}>Line Item</ModalHeader>
+    <ModalBody>
+      <div class='form-group'>
+        <input
+          bind:value={lineItem.qty}
+          placeholder="Quantity"
+          class="form-control form-control-sm" 
+          required/>
+      </div>
+      <div class='form-group'>
+        <input
+          bind:value={lineItem.desc}
+          placeholder="Description"
+          class="form-control form-control-sm" 
+          required/>
+      </div>
+      <div class='form-group'>
+        <input
+          bind:value={lineItem.price}
+          placeholder="Price"
+          class="form-control form-control-sm"
+          required />
+      </div>
+      <div class='form-group'>
+        <input
+          readonly
+          bind:value={total}
+          placeholder="Total"
+          class="form-control form-control-sm" 
+          required/>
+      </div>
+    </ModalBody>
+    <ModalFooter>
+      {#if lineItem.lineItemId}
+        <button class='btn btn-danger btn-outline ustify-start' on:click|preventDefault={del} style='margin-right:auto;'>Delete</button>
+      {/if}
+      <button class='btn btn-primary' type='submit'>Save</button>
+      <button class='btn btn-secondary' on:click|preventDefault={toggle}>Cancel</button>
+    </ModalFooter>
+  </Modal>
+</form>
 
 
