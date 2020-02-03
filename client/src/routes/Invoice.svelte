@@ -201,21 +201,15 @@
         </div>
       </div>
     </div>
-    <div class='row'>
-      <div class="col">
-        <div class="btn btn-primary" on:click={save}>
-          Save Invoice
-        </div>
+    <div class='d-flex justify-content-start mt-2'>
+      <div class='btn btn-outline-secondary' on:click={print}>
+        Print PDF
       </div>
-      <div class="col">
-        <div class="btn btn-secondary" on:click={markPaid}>
-          Mark Paid
-        </div>
+      <div class="btn btn-outline-secondary ml-2" on:click={markPaid}>
+        Mark Paid
       </div>
-      <div class="col">
-        <div class='btn btn-info btn-outline' on:click={print}>
-          Print PDF
-        </div>
+      <div class="btn btn-primary ml-2" on:click={save}>
+        Save Invoice
       </div>
     </div>
   </div>
@@ -230,18 +224,6 @@
 <InvoiceDirtyModal on:cancelNavigation={cancelNavigation}></InvoiceDirtyModal>
 
 <style>
-  .banner {
-    border-top: 20px solid #007bff;
-    padding-top: 20px;
-  }
-
-  h3 .edit-link { 
-    display: inline-block; 
-  }
-
-  .card-top {
-    padding-top: 0px;
-  }
 
   .btn-spacing {
     margin-bottom: 1rem;

@@ -1,82 +1,99 @@
-    <script>
-    import {
-      Button, 
-      Modal,
-      ModalBody,
-      ModalFooter,
-      ModalHeader,
-      Input,
-      FormGroup
-    } from "sveltestrap";
-    import { displayRecipientModal } from '../stores.js';
-    import { user } from '../stores.js';
-    import UIFacade from '../ui-facade.js';
+<script>
+  import {
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader
+  } from "sveltestrap";
+  import { displayRecipientModal } from '../stores.js';
+  import { user } from '../stores.js';
+  import UIFacade from '../ui-facade.js';
 
-    let recipient = {}
+  let recipient = {}
 
-    const save = () => UIFacade.createRecipient(recipient) ? toggle() : false;
-    const toggle = () => (displayRecipientModal.set(false));
-  </script>
-  
+  const save = () => UIFacade.createRecipient(recipient) ? toggle() : false;
+  const toggle = () => (displayRecipientModal.set(false));
+</script>
+
+<form on:submit|preventDefault='{save}'>
   <Modal isOpen={$displayRecipientModal} {toggle}>
     <ModalHeader {toggle}>Recipient Info</ModalHeader>
     <ModalBody>
-      <FormGroup>
-        <Input
+      <div class='form-group'>
+        <input
           bind:value={recipient.company}
-          placeholder="Recipient Name" 
-          class='form-control-sm'
+          placeholder="Recipient Name (required)" 
+          class='form-control-sm form-control'
+          type='text'
+          required
         />
-      </FormGroup>
-      <FormGroup>
-        <Input
+      </div>
+      <div class='form-group'>
+        <input
           bind:value={recipient.address}
-          placeholder="Recipient Address" 
-          class='form-control-sm'
+          placeholder="Recipient Address (required)" 
+          class='form-control-sm form-control'
+          type='text'
+          required
         />
-      </FormGroup>
-      <FormGroup>
-        <Input
+      </div>
+      <div class='form-group'>
+        <input
           bind:value={recipient.city}
-          placeholder="Recipient City" 
-          class='form-control-sm'
+          placeholder="Recipient City (required)" 
+          class='form-control-sm form-control'
+          type='text'
+          required
         />
-      </FormGroup>
-      <FormGroup>
-        <Input
+      </div>
+      <div class='form-group'>
+        <input
           bind:value={recipient.stateprov}
-          placeholder="Recipient State/Province" 
-          class='form-control-sm'
+          placeholder="Recipient State/Province (required)" 
+          class='form-control-sm form-control'
+          type='text'
+          required
         />
-      </FormGroup>
-      <FormGroup>
-        <Input
+      </div>
+      <div class='form-group'>
+        <input
           bind:value={recipient.postal}
-          placeholder="Recipient Postal" 
-          class='form-control-sm'
+          placeholder="Recipient Postal (required)" 
+          class='form-control-sm form-control'
+          type='text'
+          required
         />
-      </FormGroup>
-      <FormGroup>
-        <Input
+      </div>
+      <div class='form-group'>
+        <input
           bind:value={recipient.phone}
-          placeholder="Recipient Phone" 
-          class='form-control-sm'
+          placeholder="Recipient Phone (required)" 
+          class='form-control-sm form-control'
+          type='phone'
+          required
         />
-      </FormGroup>
-      <FormGroup>
-        <Input
+      </div>
+      <div class='form-group'>
+        <input
           bind:value={recipient.email}
-          placeholder="Recipient Email" 
-          class='form-control-sm'
+          placeholder="Recipient Email (required)" 
+          class='form-control-sm form-control'
+          type='email'
+          required
         />
-      </FormGroup>
+      </div>
     </ModalBody>
     <ModalFooter>
-      <Button color="primary" on:click={save}>
+      <button 
+        class='btn btn-primary' 
+        type='submit'>
         Save
-      </Button>
-      <Button color="secondary" on:click={toggle}>
+      </button>
+      <button 
+        class='btn btn-secondary' 
+        on:click|preventDefault={toggle}>
         Cancel
-      </Button>
+      </button>
     </ModalFooter>
   </Modal>
+</form>

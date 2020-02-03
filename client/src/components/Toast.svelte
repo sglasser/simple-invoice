@@ -7,25 +7,6 @@
    visible: false
   });
 
-  // const types = {
-  //   success: {
-  //     color: 'success',
-  //     icon: 'fa-check'
-  //   },
-  //   warning: {
-  //     color: 'warning',
-  //     icon:
-  //   },
-  //   error: {
-  //     color:'danger',
-  //     icon: 
-  //   }, 
-  //   info: {
-  //     color: 'info',
-  //     icon:
-  //   }
-  // }
-
   export const toast = (color, timeout, header, message) => {
     toastStore.set({
       color,

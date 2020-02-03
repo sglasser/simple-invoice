@@ -52,4 +52,8 @@
 	.app {
 		margin: 2em;
 	}
+  :global(.required-field::after) {
+    content: "*";
+    color: red;
+  }
 </style>
