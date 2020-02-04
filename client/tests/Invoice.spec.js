@@ -1,14 +1,17 @@
 
 import { render } from '@testing-library/svelte'
  
-import Dashboard from '../src/components/Dashboard.svelte';
+import Invoice from '../src/routes/Invoice.svelte';
+import UIFacade from '../src/ui-facade.js';
+
+jest.mock('../src/ui-facade.js');
  
 describe('App', () => {
  
   // Unmounts any components mounted in the previous test.
  
   test('should render', () => {
-    const { container } = render(Dashboard);
+    const { container } = render(Invoice);
     expect(container).toBeTruthy();
   });
  
