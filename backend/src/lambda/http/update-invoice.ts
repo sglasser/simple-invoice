@@ -1,5 +1,9 @@
 import 'source-map-support/register';
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
+import { 
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult 
+} from 'aws-lambda';
 import { Invoice } from '../../models/invoice';
 import { Db } from '../../dynamodb/db';
 import { createLogger } from '../../utils/logger';

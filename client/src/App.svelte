@@ -10,20 +10,20 @@
 	import { onMount } from 'svelte';
 
 	// TODO remove, temp for dev work
-	user.set({
-		isAuthenticated: true,
-		userId: '1234',
-		accessToken: 111111,
-		recipientId: '1234',
-		company: 'Sierra Golf Software',
-		address: '9169 Coral Sea St',
-		city: 'Blaine',
-		stateprov: 'MN',
-		postal: '55449',
-		phone: '763-218-2571',
-		email: 'steve@steveglasser.com',
-		logoUrl: 'https://simple-invoice-user-logo-dev.s3.us-east-2.amazonaws.com/1234'
-	});
+	// user.set({
+	// 	isAuthenticated: true,
+	// 	userId: '1234',
+	// 	accessToken: 111111,
+	// 	recipientId: '1234',
+	// 	company: 'Sierra Golf Software',
+	// 	address: '9169 Coral Sea St',
+	// 	city: 'Blaine',
+	// 	stateprov: 'MN',
+	// 	postal: '55449',
+	// 	phone: '763-218-2571',
+	// 	email: 'steve@steveglasser.com',
+	// 	logoUrl: 'https://simple-invoice-user-logo-dev.s3.us-east-2.amazonaws.com/1234'
+	// });
 	let toast;
 	// handle auth if access_token from Auth0 in url hash and navigate to home 
 	const locationHash = window.location.hash;

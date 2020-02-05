@@ -10,7 +10,6 @@ describe('Invoices', () => {
   test('should render', () => {
     const { container } = render(Invoices);
     expect(container).toBeTruthy();
-    // expect(container).;
   });
 
   test('should load invoices', () => {
@@ -18,14 +17,9 @@ describe('Invoices', () => {
     expect(loadSpy).toHaveBeenCalledTimes(1);
   });
 
-  test('should have Create Invoice button', () => {
+  test('should have button to create new invoice', () => {
     const { getByText } = render(Invoices);
     const createBtn = getByText('Create Invoice');
     expect(createBtn).toHaveTextContent('Create Invoice')
   });
-
-  test('should navigate to invoice', async () => {
-    const createBtn = getByText('Create Invoice');
-    await fireEvent.click(createBtn);
-  })
 });

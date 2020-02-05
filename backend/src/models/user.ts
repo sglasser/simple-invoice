@@ -7,5 +7,6 @@ export interface User {
   postal: string,
   phone: string,
   email: string,
-  created: string
+  created: string,
+  logoUrl?: string
 }
