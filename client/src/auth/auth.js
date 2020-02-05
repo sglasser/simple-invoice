@@ -41,38 +41,13 @@ class Auth {
   async getUserInfo(userId) {
     try {
       const user = await getUser(userId);
-      console.log('user', user);
+      return user;
     } catch (err) {
       console.log(err);
       return {};
     }
   }
 
-  getAccessToken() {
-    return this._accessToken;
-  }
-
-  getIdToken() {
-    return this._idToken;
-  }
-
-  setSession(authResult) {
-    this._accessToken = authResult.accessToken;
-    this._idToken = authResult.idToken;
-    this._expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
-  }
-
-  renewSession() {
-    this._auth0.checkSession({}, (err, authResult) => {
-       if (authResult && authResult.accessToken && authResult.idToken) {
-         this.setSession(authResult);
-       } else if (err) {
-         this.logout();
-         console.log(err);
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-       }
-    });
-  }
 
   logout() {
     // Remove tokens and expiry time

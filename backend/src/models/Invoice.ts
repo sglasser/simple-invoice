@@ -12,8 +12,7 @@ export interface Invoice {
   year?: number,
   month?: number,
   dueYear?: number,
-  dueMonth?: number,
-  attachmentUrl?: string
+  dueMonth?: number
 }
 
 export interface LineItem {

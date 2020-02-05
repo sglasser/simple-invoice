@@ -1,3 +1,9 @@
+import { 
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult, 
+  APIGatewayProxyHandler 
+} from 'aws-lambda';
+import { getUserId } from '../../lambda/utils';
 import { Db } from '../../dynamodb/db';
 import { createLogger } from '../../utils/logger';
 
@@ -5,8 +11,8 @@ const logger = createLogger('get-invoices');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-  // const userId = getUserId(event);
-  const userId = '1234';
+  const userId = getUserId(event);
+  // const userId = '1234';
 
   const maxInvoice = await Db.getInstance().getMaxInvoiceNumber(userId);
 

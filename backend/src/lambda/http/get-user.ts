@@ -1,15 +1,18 @@
 import 'source-map-support/register';
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda';
-// import { getUserId } from '../../lambda/utils';
+import { 
+  APIGatewayProxyEvent, 
+  APIGatewayProxyResult,
+  APIGatewayProxyHandler 
+} from 'aws-lambda';
+import { getUserId } from '../../lambda/utils';
 import { Db } from '../../dynamodb/db';
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('get-users');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info('event', event)
-  // const userId = getUserId(event);
-  const userId = '1234';
+  const userId = getUserId(event);
+  // const userId = '1234';
 
   const user = await Db.getInstance().getUser(userId);
 
