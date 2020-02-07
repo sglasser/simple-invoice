@@ -33,6 +33,7 @@ export async function updateRecipient(recipient, idToken) {
 }
 
 export async function createRecipient(recipient, idToken) {
+  console.log(recipient)
   const result = await fetch(
     `${apiEndpoint}/recipient`,
     {

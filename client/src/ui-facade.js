@@ -55,7 +55,6 @@ class AppFacade {
 
   async createRecipient (recipient) {
     try {
-      recipient.userId = get(user).userId;
       recipient.recipientId = uuid();
       loading.set(true);
       const result = await createRecipient(recipient, get(user).userId);
@@ -93,12 +92,13 @@ class AppFacade {
   }
 
   async upsertInvoicer (invoicer) {
+    console.log(invoicer)
     try {
       loading.set(true);
-      if (invoicer.userId) {
-        await updateUser(invoicer, get(user).userId);
-      } else {
+      if (invoicer.new) {
         await createUser(invoicer, invoicer.userId);
+      } else {
+        await updateUser(invoicer, get(user).userId);
       }
       toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Your company info was successfully saved.')
     } catch (err) {

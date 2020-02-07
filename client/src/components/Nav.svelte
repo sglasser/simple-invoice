@@ -1,11 +1,7 @@
 <script>
-  import { auth } from '../stores.js';
+  import { user } from '../stores.js';
   import Auth from '../auth/auth.js';
 
-  $: loginBtnText = $auth.isAuthenticated ? 'Sign Out' : 'Sign In';
-  $: loginBtnAction = $auth.isAuthenticated ? login : logout;
-
-  const login = () => Auth.login();
   const logout = () => Auth.logout();
 </script>
 
@@ -21,7 +17,9 @@
     <ul class="navbar-nav mr-auto">
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <button class="btn btn-outline-success my-2 my-sm-0" on:click={loginBtnAction}>{loginBtnText}</button>
+      {#if $user.isAuthenticated}
+        <button class="btn btn-outline-success my-2 my-sm-0" on:click={logout}>Sign Out</button>
+      {/if}
     </form>
   </div>
 </nav>

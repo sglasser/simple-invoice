@@ -13,8 +13,8 @@ const logger = createLogger('create-recipient');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const recipient: Recipient = JSON.parse(event.body);
-  // const userId = '1234'
-  const userId = getUserId(event);
+
+  recipient.userId = getUserId(event);
 
   await Db.getInstance().createRecipient(recipient);
   

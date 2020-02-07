@@ -3,6 +3,7 @@ import { authConfig } from '../../config.js';
 import { user } from '../stores.js';
 import { getUser } from '../api/user-api.js';
 import { push } from 'svelte-spa-router';
+import { toast, stickyToast } from '../components/Toast.svelte';
 
 class Auth {
 
@@ -23,7 +24,9 @@ class Auth {
   handleAuthentication (authResult) {
     this._auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        const userInfo = this.getUserInfo(authResult.idToken);
+        const result = this.getUserInfo(authResult.idToken);
+        const userInfo = result.length ? result :  {new: true}
+        console.log('userInfo', userInfo)
         user.set({
           isAuthenticated: true,
           userId: authResult.idToken,
@@ -33,7 +36,7 @@ class Auth {
         push('/');
       } else if (err) {
         console.log(err);
-        alert(`Error: ${err.error}. Check the console for further details.`);
+        stickyToast('danger', 'Error', 'Error occured while authenticating your account. Please try again later.');
       }
     });
   }
@@ -48,7 +51,6 @@ class Auth {
     }
   }
 
-
   logout() {
     // Remove tokens and expiry time
     this._accessToken = null;
@@ -57,13 +59,6 @@ class Auth {
     this._auth0.logout({
       return_to: window.location.origin
     });
-  }
-
-  isAuthenticated() {
-    console.log(process.env.NODE_ENV)
-    return process.env.NODE_ENV === 'development'?
-      true :
-      this._idToken //&& (new Date().getTime() < this._expiresAt);
   }
 }
 

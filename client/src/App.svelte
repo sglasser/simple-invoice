@@ -43,8 +43,9 @@
   </div>
 {:else}
 	<Nav></Nav>
-	<div class='container mx-auto'>
-		Please log in <button on:click={login}>Login In</button>
+	<h1 class='text-center mt-5'>Invoicing Made Simple</h1>
+	<div class='container mx-auto w-100 mt-5 text-center'>
+		<button class='btn btn-primary btn-lg' on:click={login}>Sign In</button>
 	</div>
 {/if}
 

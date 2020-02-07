@@ -1,4 +1,5 @@
 export interface Recipient {
+    userId: string,
     recipientId: string,
     company: string,
     address: string,

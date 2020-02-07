@@ -12,12 +12,6 @@ export const user = writable({
 
 export const recipients = writable([]);
 
-export const auth = writable({
-  isAuthenticated: false,
-  userId: null,
-  accessToken: null
-});
-
 export const loading = writable(false);
 
 export const displayRecipientModal = writable(false);
