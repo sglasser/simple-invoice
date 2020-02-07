@@ -6,13 +6,21 @@
     ModalHeader
   } from "sveltestrap";
   import { displayInvoiceModal } from '../stores.js';
-  import { createEventDispatcher } from "svelte";
+  import { 
+    createEventDispatcher,
+    onMount
+  } from "svelte";
   import { user } from '../stores.js';
 
   const dispatch = createEventDispatcher();
+  let invoicer;
+
+  onMount(() => {
+    invoicer = { ...$user };
+  })
 
   const save = () =>  {
-    dispatch("updateInvoicer", $user);
+    dispatch("updateInvoicer", invoicer);
     toggle();
   }
   const toggle = () => (displayInvoiceModal.set(false));
@@ -23,7 +31,7 @@
     <ModalBody>
       <div class='form-group'>
         <input
-          bind:value={$user.company}
+          bind:value={invoicer.company}
           placeholder="Company Name (required)" 
           class='form-control form-control-sm'
           type='text'
@@ -32,7 +40,7 @@
       </div>
       <div class='form-group'>
         <input
-          bind:value={$user.address}
+          bind:value={invoicer.address}
           placeholder="Company Address (required)" 
           class='form-control form-control-sm'
           type='text'
@@ -41,7 +49,7 @@
       </div>
       <div class='form-group'>
         <input
-          bind:value={$user.city}
+          bind:value={invoicer.city}
           placeholder="Company City (required)" 
           class='form-control form-control-sm'
           type='text'
@@ -50,7 +58,7 @@
       </div>
       <div class='form-group'>
         <input
-          bind:value={$user.stateprov}
+          bind:value={invoicer.stateprov}
           placeholder="Company State/Province (required)" 
           class='form-control form-control-sm'
           type='text'
@@ -59,7 +67,7 @@
       </div>
       <div class='form-group'>
         <input
-          bind:value={$user.postal}
+          bind:value={invoicer.postal}
           placeholder="Company Postal (required)" 
           class='form-control form-control-sm'
           name='postal'

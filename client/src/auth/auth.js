@@ -21,17 +21,17 @@ class Auth {
     this._auth0.authorize();
   }
 
-  handleAuthentication (authResult) {
-    this._auth0.parseHash((err, authResult) => {
+  async handleAuthentication (authResult) {
+    this._auth0.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        const result = this.getUserInfo(authResult.idToken);
-        const userInfo = result.length ? result :  {new: true}
+        const result = await this.getUserInfo(authResult.idToken);
+        const userInfo = result ? result : {new: true}
         console.log('userInfo', userInfo)
         user.set({
+          ...userInfo,
           isAuthenticated: true,
           userId: authResult.idToken,
           accessToken: authResult.accessToken,
-          ...userInfo
         });
         push('/');
       } else if (err) {

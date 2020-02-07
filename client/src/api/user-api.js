@@ -12,7 +12,7 @@ export async function getUser(idToken) {
     }
   );
   const data = await result.json();
-  return data;
+  return data[0] || null;
 }
 
 export async function updateUser(user, idToken) {

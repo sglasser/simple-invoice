@@ -56,6 +56,8 @@ class AppFacade {
   async createRecipient (recipient) {
     try {
       recipient.recipientId = uuid();
+      // remove the new property added in Auth
+      delete recipient.new
       loading.set(true);
       const result = await createRecipient(recipient, get(user).userId);
       recipients.update(values => [...values, recipient]);
@@ -92,13 +94,13 @@ class AppFacade {
   }
 
   async upsertInvoicer (invoicer) {
-    console.log(invoicer)
     try {
       loading.set(true);
       if (invoicer.new) {
         await createUser(invoicer, invoicer.userId);
       } else {
         await updateUser(invoicer, get(user).userId);
+        user.set(invoicer);
       }
       toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Your company info was successfully saved.')
     } catch (err) {
@@ -111,12 +113,9 @@ class AppFacade {
 
   async uploadLogo (file) {
     try {
-      console.log('upload', file);
       loading.set(true);
       const upload = await getUploadUrl(get(user).userId);
-      console.log('upload url', upload.uploadUrl);
-      const result = await uploadFile(upload.uploadUrl, file);
-      console.log(result);
+      await uploadFile(upload.uploadUrl, file);
     } catch (err) {
       console.log(err);
       stickyToast('danger', 'Error', 'Error occured while uploading your logo. Please try again later.');
@@ -124,7 +123,6 @@ class AppFacade {
       loading.set(false);
     }
   }
-  
 }
 
 const instance = new AppFacade();

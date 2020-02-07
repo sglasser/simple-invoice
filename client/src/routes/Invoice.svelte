@@ -39,6 +39,9 @@
   $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
     `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.stateprov} ${currentInvoice.recipient.postal}` :
     ``;
+  $: invoicerAddress = !$user.new ?           
+    `${$user.company}<br>${$user.address}<br>${$user.city}, ${$user.stateprov} ${$user.postal}<br>` : 
+    `Click icon to add your company info`;
   $: companyLogoURI = $user.logoUrl ? $user.logoUrl : 'logoPlaceholder.jpg';
 
   // functions
@@ -120,7 +123,7 @@
               </div>
               <div class='w-50'>
                 <h3>
-                  {$user.company} 
+                  {$user.company || ''} 
                 </h3>
               </div>            
             </div>
@@ -128,9 +131,7 @@
               <div on:click={showInvoicerModal} style='position: absolute; right: -25px; top: -10px;'>
                 <i class="fas fa-user-edit"></i>
               </div>
-              {$user.company}<br>
-              {$user.address}<br>
-              {$user.city}, {$user.stateprov} {$user.postal}<br>
+              {@html invoicerAddress}
             </div>
           </div>
           <div class='mt-4'>

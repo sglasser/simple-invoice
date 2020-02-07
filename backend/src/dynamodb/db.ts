@@ -139,6 +139,16 @@ export class Db {
     this.logger.info('get recipients', userId);
     const result = await this.docClient.query({
       TableName: process.env.RECIPIENT_TABLE,
+      ExpressionAttributeNames: {
+        "#company": "company",
+        "#address": "address",
+        "#city": "city",
+        "#stateprov": "stateprov",
+        "#postal": "postal",
+        "#phone": "phone",
+        "#email": "email"
+      },
+      ProjectionExpression: "#company, #address, #city, #stateprov, #postal, #phone, #email",
       KeyConditionExpression: 'userId = :u',
       ExpressionAttributeValues: {
         ':u': userId
