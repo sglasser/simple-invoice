@@ -64,24 +64,6 @@
           required
         />
       </div>
-      <div class='form-group'>
-        <input
-          bind:value={recipient.phone}
-          placeholder="Recipient Phone (required)" 
-          class='form-control-sm form-control'
-          type='phone'
-          required
-        />
-      </div>
-      <div class='form-group'>
-        <input
-          bind:value={recipient.email}
-          placeholder="Recipient Email (required)" 
-          class='form-control-sm form-control'
-          type='email'
-          required
-        />
-      </div>
     </ModalBody>
     <ModalFooter>
       <button 

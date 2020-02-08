@@ -11,7 +11,6 @@ const logger = createLogger('get-invoices');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const userId = getUserId(event);
-  //const userId = '1234';
 
   const invoices = await Db.getInstance().getInvoices(userId);
 

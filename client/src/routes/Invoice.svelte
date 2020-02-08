@@ -39,10 +39,11 @@
   $: recipientAddress = currentInvoice && currentInvoice.recipient.address ? 
     `${currentInvoice.recipient.address}<br>${currentInvoice.recipient.city}, ${currentInvoice.recipient.stateprov} ${currentInvoice.recipient.postal}` :
     ``;
-  $: invoicerAddress = !$user.new ?           
+  $: invoicerAddress = $user.company ?        
     `${$user.company}<br>${$user.address}<br>${$user.city}, ${$user.stateprov} ${$user.postal}<br>` : 
     `Click icon to add your company info`;
   $: companyLogoURI = $user.logoUrl ? $user.logoUrl : 'logoPlaceholder.jpg';
+  $: invoicerClone = {...$user};
 
   // functions
   const setInvoiceDirty = () => isInvoiceDirty.set(true);
@@ -68,7 +69,7 @@
     currentInvoice.lineItems = currentInvoice.lineItems.filter(lineItem => lineItem.lineItemId !== lineItemToDelete.lineItemId);
     setInvoiceDirty();
   }
-  const updateInvoicer = (event) => UIFacade.upsertInvoicer(event.detail);
+  const updateInvoicer = (event) => UIFacade.updateInvoicer(event.detail);
   const save = () => {
     // if due date has been changed
     const dueDate = moment(currentInvoice.due);
@@ -151,10 +152,15 @@
               <div on:click={showRecipientModal} style='position: absolute; right: -25px; top: -10px;'>
                 <i class="fas fa-user-plus"></i>
               </div>
-              <select bind:value={currentInvoice.recipient} on:change={setInvoiceDirty} class='form-control-sm'>
+              <select 
+                bind:value={currentInvoice.recipient} 
+                on:change={setInvoiceDirty} 
+                class='form-control-sm'>
                 <option value=''>Select Recipient</option>
                 {#each $recipients as recipient}
-                  <option value={recipient}>
+                  <option 
+                    value={recipient}
+                    selected={currentInvoice.recipient.recipientId === recipient.recipientId}>
                     {recipient.company}
                   </option>
                 {/each}
@@ -216,7 +222,7 @@
   </div>
 {/if}
 <RecipientModal invoice={currentInvoice}></RecipientModal>
-<InvoicerModal on:updateInvoicer={updateInvoicer}></InvoicerModal>
+<InvoicerModal invoicer={invoicerClone} on:updateInvoicer={updateInvoicer}></InvoicerModal>
 <LineItemModal 
   on:updateLineItem={updateLineItem} 
   on:deleteLineItem={deleteLineItem} 

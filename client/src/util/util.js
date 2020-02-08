@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { get } from 'svelte/store';
-import { invoices } from '../stores.js';
+import { invoices, user } from '../stores.js';
 
 export const getYears = () =>  {
   let years = [];
@@ -19,7 +19,8 @@ export const getInvoiceFromStore = (invoiceId) => {
 export const getEmptyInvoice = () => {
   const now = moment();
   return {     
-    invoiceId: null, 
+    invoiceId: '', 
+    userId: '',
     invoiceNumber: '',
     recipient: {
       recipientId: '',

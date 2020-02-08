@@ -1,13 +1,13 @@
 import { apiEndpoint } from '../../config.js';
 
-export async function getRecipients(idToken) {
+export async function getRecipients(authToken) {
   const result = await fetch(
     `${apiEndpoint}/recipient`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -15,7 +15,7 @@ export async function getRecipients(idToken) {
   return data;
 }
 
-export async function updateRecipient(recipient, idToken) {
+export async function updateRecipient(recipient, authToken) {
   const result = await fetch(
     `${apiEndpoint}/recipient`,
     {
@@ -23,7 +23,7 @@ export async function updateRecipient(recipient, idToken) {
       body: JSON.stringify(recipient),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -32,7 +32,7 @@ export async function updateRecipient(recipient, idToken) {
 
 }
 
-export async function createRecipient(recipient, idToken) {
+export async function createRecipient(recipient, authToken) {
   console.log(recipient)
   const result = await fetch(
     `${apiEndpoint}/recipient`,
@@ -41,7 +41,7 @@ export async function createRecipient(recipient, idToken) {
       body: JSON.stringify(recipient),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );

@@ -9,43 +9,38 @@
 	import { loading } from './stores.js';
 	import { onMount } from 'svelte';
 
-	// TODO remove, temp for dev work
-	// user.set({
-	// 	isAuthenticated: true,
-	// 	userId: '1234',
-	// 	accessToken: 111111,
-	// 	recipientId: '1234',
-	// 	company: 'Sierra Golf Software',
-	// 	address: '9169 Coral Sea St',
-	// 	city: 'Blaine',
-	// 	stateprov: 'MN',
-	// 	postal: '55449',
-	// 	phone: '763-218-2571',
-	// 	email: 'steve@steveglasser.com',
-	// 	logoUrl: 'https://simple-invoice-user-logo-dev.s3.us-east-2.amazonaws.com/1234'
-	// });
 	let toast;
-	// handle auth if access_token from Auth0 in url hash and navigate to home 
-	const locationHash = window.location.hash;
-	if (/access_token|id_token|error/.test(locationHash)) Auth.handleAuthentication(locationHash);
-	
+	let isAuthenticating = false;
+
+	onMount(async () => {
+		const locationHash = window.location.hash;
+		if (/access_token|id_token|error/.test(locationHash)) {
+			isAuthenticating = true;
+			await Auth.handleAuthentication(locationHash);
+			isAuthenticating = false;
+		}
+	});
+
 	const login = () => Auth.login();
 </script>
 
 {#if $loading}
   <Overlay></Overlay>
 {/if}
-{#if $user.isAuthenticated}
-  <Toast></Toast>
-  <Nav></Nav>
+<Toast></Toast>
+<Nav></Nav>
+{#if $user.isAuthenticated && !isAuthenticating}
   <div class='app container mx-auto'>
     <Router {routes}/>
   </div>
-{:else}
-	<Nav></Nav>
+{:else if !$user.isAuthenticated && !isAuthenticating}
 	<h1 class='text-center mt-5'>Invoicing Made Simple</h1>
 	<div class='container mx-auto w-100 mt-5 text-center'>
 		<button class='btn btn-primary btn-lg' on:click={login}>Sign In</button>
+	</div>
+{:else} 
+	<div class='container mx-auto w-100 mt-5 text-center'>
+		Loading Account...
 	</div>
 {/if}
 

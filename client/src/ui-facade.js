@@ -17,7 +17,7 @@ class AppFacade {
   async getInvoices () {
     try {
       loading.set(true);
-      const result = await getInvoices(get(user).userId);
+      const result = await getInvoices(get(user).authToken);
       invoices.set(result);
     } catch (err) {
       console.log(err);
@@ -30,7 +30,7 @@ class AppFacade {
   async getMaxInvoiceNumber () {
     try {
       loading.set(true);
-      const result = await getMaxInvoiceNumber(get(user).userId);
+      const result = await getMaxInvoiceNumber(get(user).authToken);
       return parseInt(result) + 1;
     } catch (err) {
       console.log(err);
@@ -43,7 +43,7 @@ class AppFacade {
   async getRecipients () {
     try {
       loading.set(true);
-      const result = await getRecipients(get(user).userId);
+      const result = await getRecipients(get(user).authToken);
       recipients.set(result);
     } catch (err) {
       console.log(err);
@@ -56,10 +56,12 @@ class AppFacade {
   async createRecipient (recipient) {
     try {
       recipient.recipientId = uuid();
-      // remove the new property added in Auth
-      delete recipient.new
+      let recipientClone = {
+        ...recipient,
+        userId: get(user).userId
+      };
       loading.set(true);
-      const result = await createRecipient(recipient, get(user).userId);
+      const result = await createRecipient(recipientClone, get(user).authToken);
       recipients.update(values => [...values, recipient]);
       toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Recipient was successfully saved.');
     } catch (err) {
@@ -73,14 +75,12 @@ class AppFacade {
   async upsertInvoice (invoice) {
     try {
       loading.set(true);
-      const userId = get(user).userId;
       if (invoice.invoiceId) {
-        await updateInvoice(invoice, userId);
+        await updateInvoice(invoice, get(user).authToken);
       } else {
         invoice.invoiceId = uuid();
-        await createInvoice(invoice, userId);
-        // TODO should this invoice actually be pushed into store?
-        // maybe only if it meets current search criteria?
+        invoice.userId = get(user).userId;
+        await createInvoice(invoice, get(user).authToken);
         invoices.update(values => [...values, invoice]);
       }
       isInvoiceDirty.set(false);
@@ -93,29 +93,31 @@ class AppFacade {
     } 
   }
 
-  async upsertInvoicer (invoicer) {
+  async updateInvoicer (invoicer) {
     try {
       loading.set(true);
-      if (invoicer.new) {
-        await createUser(invoicer, invoicer.userId);
-      } else {
-        await updateUser(invoicer, get(user).userId);
-        user.set(invoicer);
-      }
-      toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Your company info was successfully saved.')
+      // copy invoicer and remove properties for db
+      let invoicerClone = {...invoicer};
+      delete invoicerClone.isAuthenticated;
+      delete invoicerClone.authToken;
+      await updateUser(invoicerClone, get(user).authToken);
+      user.set(invoicer);
+      toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Your company info was successfully saved.');
     } catch (err) {
       console.log(err);
       stickyToast('danger', 'Error', 'Error occured while saving your company info. Please try again later.');
     } finally {
-      loading.set(false);
+      loading.set(false); 
     }
   }
 
   async uploadLogo (file) {
     try {
       loading.set(true);
-      const upload = await getUploadUrl(get(user).userId);
-      await uploadFile(upload.uploadUrl, file);
+      const result = await getUploadUrl(get(user).authToken);
+      await uploadFile(result.uploadUrl, file);
+      user.update(values => ({...values, logoUrl: result.downloadUrl}));
+      toast('success', this.TOAST_DISPLAY_LENGTH, 'Success', 'Your company logo was successfully saved.');
     } catch (err) {
       console.log(err);
       stickyToast('danger', 'Error', 'Error occured while uploading your logo. Please try again later.');

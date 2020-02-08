@@ -5,7 +5,6 @@ import {
   APIGatewayProxyResult 
 } from 'aws-lambda';
 import { createLogger } from '../../utils/logger';
-import { getUserId } from '../../lambda/utils';
 import { Recipient } from '../../models/Recipient';
 import { Db } from '../../dynamodb/db';
 
@@ -13,8 +12,6 @@ const logger = createLogger('create-recipient');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const recipient: Recipient = JSON.parse(event.body);
-
-  recipient.userId = getUserId(event);
 
   await Db.getInstance().createRecipient(recipient);
   

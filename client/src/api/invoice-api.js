@@ -1,6 +1,6 @@
 import { apiEndpoint } from '../../config.js';
 
-export async function createInvoice(invoice, idToken) {
+export async function createInvoice(invoice, authToken) {
   const result = await fetch(
     `${apiEndpoint}/invoice`,
     {
@@ -8,7 +8,7 @@ export async function createInvoice(invoice, idToken) {
       body: JSON.stringify(invoice),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -16,7 +16,7 @@ export async function createInvoice(invoice, idToken) {
   return data;
 }
 
-export async function updateInvoice(invoice, idToken) {
+export async function updateInvoice(invoice, authToken) {
   const result = await fetch(
     `${apiEndpoint}/invoice`,
     {
@@ -24,7 +24,7 @@ export async function updateInvoice(invoice, idToken) {
       body: JSON.stringify(invoice),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -32,14 +32,14 @@ export async function updateInvoice(invoice, idToken) {
   console.log('updateUser result', result)
 }
 
-export async function getInvoices(idToken) {
+export async function getInvoices(authToken) {
   const result = await fetch(
     `${apiEndpoint}/invoice`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -47,14 +47,14 @@ export async function getInvoices(idToken) {
   return data;
 }
 
-export async function getMaxInvoiceNumber(idToken) {
+export async function getMaxInvoiceNumber(authToken) {
   const result = await fetch(
     `${apiEndpoint}/max-invoice-number`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );

@@ -101,15 +101,13 @@ export class Db {
     this.logger.info('update user', updatedUser.userId);
     return this.docClient.update({
       TableName: process.env.USER_TABLE,
-      UpdateExpression: 'set company = :n, address = :a, city = :c, stateprov = :s, postal = :po, phone = :ph, email = :e',
+      UpdateExpression: 'set company = :n, address = :a, city = :c, stateprov = :s, postal = :po',
       ExpressionAttributeValues: {
         ':n': updatedUser.company,
         ':a': updatedUser.address,
         ':c': updatedUser.city,
         ':s': updatedUser.stateprov,
-        ':po': updatedUser.postal,
-        ':ph': updatedUser.phone,
-        ':e': updatedUser.email
+        ':po': updatedUser.postal
       },
       Key: { "userId": updatedUser.userId}
     }).promise();
@@ -140,15 +138,14 @@ export class Db {
     const result = await this.docClient.query({
       TableName: process.env.RECIPIENT_TABLE,
       ExpressionAttributeNames: {
+        "#recipientId": "recipientId",
         "#company": "company",
         "#address": "address",
         "#city": "city",
         "#stateprov": "stateprov",
-        "#postal": "postal",
-        "#phone": "phone",
-        "#email": "email"
+        "#postal": "postal"
       },
-      ProjectionExpression: "#company, #address, #city, #stateprov, #postal, #phone, #email",
+      ProjectionExpression: "#recipientId, #company, #address, #city, #stateprov, #postal",
       KeyConditionExpression: 'userId = :u',
       ExpressionAttributeValues: {
         ':u': userId
@@ -161,15 +158,13 @@ export class Db {
     this.logger.info('update recipient', updatedRecipient.recipientId);
     return this.docClient.update({
       TableName: process.env.RECIPIENT_TABLE,
-      UpdateExpression: 'set company = :n, address = :a, city = :c, stateprov = :s, postal = :po, phone = :ph, email = :e',
+      UpdateExpression: 'set company = :n, address = :a, city = :c, stateprov = :s, postal = :po',
       ExpressionAttributeValues: {
         ':n': updatedRecipient.company,
         ':a': updatedRecipient.address,
         ':c': updatedRecipient.city,
         ':s': updatedRecipient.stateprov,
-        ':po': updatedRecipient.postal,
-        ':ph': updatedRecipient.phone,
-        ':e': updatedRecipient.email
+        ':po': updatedRecipient.postal
       },
       Key: { "recipientId": updatedRecipient.recipientId}
     }).promise();

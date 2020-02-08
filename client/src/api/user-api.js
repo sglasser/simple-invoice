@@ -1,13 +1,13 @@
 import { apiEndpoint } from '../../config.js';
 
-export async function getUser(idToken) {
+export async function getUser(authToken) {
   const result = await fetch(
     `${apiEndpoint}/user`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -15,7 +15,7 @@ export async function getUser(idToken) {
   return data[0] || null;
 }
 
-export async function updateUser(user, idToken) {
+export async function updateUser(user, authToken) {
   const result = await fetch(
     `${apiEndpoint}/user`,
     {
@@ -23,7 +23,7 @@ export async function updateUser(user, idToken) {
       body: JSON.stringify(user),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -32,15 +32,15 @@ export async function updateUser(user, idToken) {
 
 }
 
-export async function createUser(user, idToken) {
+export async function createUser(authToken) {
   const result = await fetch(
     `${apiEndpoint}/user`,
     {
       method: 'POST',
-      body: JSON.stringify(user),
+      body: JSON.stringify({}),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );
@@ -48,14 +48,14 @@ export async function createUser(user, idToken) {
   return data;
 }
 
-export async function getUploadUrl(idToken) {
+export async function getUploadUrl(authToken) {
   const result = await fetch(
     `${apiEndpoint}/user/logo`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${idToken}`
+        'Authorization': `Bearer ${authToken}`
       }
     }
   );

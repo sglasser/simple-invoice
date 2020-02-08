@@ -13,11 +13,7 @@
   import { user } from '../stores.js';
 
   const dispatch = createEventDispatcher();
-  let invoicer;
-
-  onMount(() => {
-    invoicer = { ...$user };
-  })
+  export let invoicer;
 
   const save = () =>  {
     dispatch("updateInvoicer", invoicer);

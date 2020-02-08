@@ -12,7 +12,6 @@ const logger = createLogger('get-users');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const userId = getUserId(event);
-  // const userId = '1234';
 
   const user = await Db.getInstance().getUser(userId);
 
