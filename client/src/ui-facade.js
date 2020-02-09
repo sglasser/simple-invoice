@@ -12,6 +12,10 @@ import { uuid } from 'uuidv4';
 class AppFacade {
   constructor () {
     this.TOAST_DISPLAY_LENGTH = 4000;
+    this.testInvoices = [
+      {id: 1},
+      {id: 2}
+    ]
   }
 
   async getInvoices () {

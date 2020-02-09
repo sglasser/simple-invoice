@@ -48,13 +48,14 @@ export class Db {
     this.logger.info('getMaxInvoiceNumber', userId);
     const result = await this.docClient.query({
       TableName: process.env.INVOICE_TABLE,
+      IndexName: 'MaxInvIndex',
       KeyConditionExpression: 'userId = :u',
       ExpressionAttributeValues: {
         ':u' : userId
       },
       ScanIndexForward: false
     }).promise();
-    this.logger.info('getMaxInvoiceNumber', JSON.stringify(result))
+    this.logger.info(`getMaxInvoiceNumber ${JSON.stringify(result)}`)
     return result.Items[0];
   }
 

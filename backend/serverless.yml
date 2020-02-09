@@ -17,6 +17,16 @@ custom:
         version: v1.0.0
         title: Simple Invoice API
         description: Simple invoicing application
+    models:
+      - name: Invoice
+        contentType: application/json
+        schema: ${file(api-models/invoice-model.json)}
+      - name: User
+        contentType: application/json
+        schema: ${file(api-models/user-model.json)}
+      - name: Recipient
+        contentType: application/json
+        schema: ${file(api-models/recipient-model.json)}
 
 plugins:
   - serverless-webpack
@@ -61,6 +71,8 @@ provider:
         - "*"
 
 functions:
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
   CreateInvoice:
     handler: src/lambda/http/create-invoice.handler
     events:
@@ -68,13 +80,13 @@ functions:
           method: post
           path: invoice
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new invoice
             description: Create a new invoice
-            #requestModels:
-              #'application/json': CreateRequest
+            requestModels:
+              'application/json': Invoice
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -89,13 +101,11 @@ functions:
           method: get
           path: invoice
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Get invoices
             description: Get invoices for user
-            #requestModels:
-              #'application/json': CreateRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -110,19 +120,19 @@ functions:
           method: get
           path: max-invoice-number
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Get max invoice number used for a user
             description: Get max invoice number used for a user
-            #requestModels:
-              #'application/json': CreateRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}
+        Resource: 
+          - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}"
+          - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INVOICE_TABLE}/index/*"
 
   UpdateInvoice:
     handler: src/lambda/http/update-invoice.handler
@@ -131,13 +141,13 @@ functions:
           method: patch
           path: invoice
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update an invoice
             description: Update an invoice
-            #requestModels:
-              #'application/json': CreateRequest
+            requestModels:
+              'application/json': Invoice
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -152,13 +162,13 @@ functions:
           method: post
           path: user
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new user
             description: Create a new user
-            #requestModels:
-              #'application/json': CreateRequest
+            requestModels:
+              'application/json': User
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -173,13 +183,11 @@ functions:
           method: get
           path: user
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Get user
             description: Get user
-            #requestModels:
-              #'application/json': CreateRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -194,13 +202,13 @@ functions:
           method: patch
           path: user
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update user
             description: Update a user
-            #requestModels:
-              #'application/json': CreateRequest
+            requestModels:
+              'application/json': User
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -215,13 +223,13 @@ functions:
           method: post
           path: recipient
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a recipient
             description: Create a recipient
-            #requestModels:
-              #'application/json': CreateRequest
+            requestModels:
+              'application/json': Recipient
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -236,13 +244,11 @@ functions:
           method: get
           path: recipient
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Get recipients
             description: Get recipients
-            #requestModels:
-              #'application/json': CreateRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -257,13 +263,13 @@ functions:
           method: patch
           path: recipient
           cors: true
-          # authorizer: Auth
-          # reqValidatorName: RequestBodyValidator
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update recipient
             description: Update recipient
-            #requestModels:
-              #'application/json': CreateRequest
+            requestModels:
+              'application/json': Recipient
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -278,7 +284,7 @@ functions:
           method: get
           path: user/logo
           cors: true
-          #authorizer: Auth
+          authorizer: Auth
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -360,14 +366,14 @@ resources:
         TableName: ${self:provider.environment.RECIPIENT_TABLE}
 
 
-    # RequestBodyValidator:
-    #   Type: AWS::ApiGateway::RequestValidator
-    #   Properties:
-    #     Name: 'request-body-validator'
-    #     RestApiId:
-    #       Ref: ApiGatewayRestApi
-    #     ValidateRequestBody: true
-    #     ValidateRequestParameters: false
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
 
     AttachmentsBucket:
       Type: AWS::S3::Bucket

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "user",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string"
+    },
+    "recipientId": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    }, 
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "stateprov": {
+      "type": "string"
+    },
+    "postal": {
+      "type": "string"
+    },
+    "created": {
+      "type": "string"
+    }
+  },
+  "required": ["userId", "recipientId"],
+  "additionalProperties": true
+}

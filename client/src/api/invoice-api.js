@@ -29,7 +29,7 @@ export async function updateInvoice(invoice, authToken) {
     }
   );
   // TODO response status and throw error if not 204
-  console.log('updateUser result', result)
+  console.log('updateInvoice result', result)
 }
 
 export async function getInvoices(authToken) {

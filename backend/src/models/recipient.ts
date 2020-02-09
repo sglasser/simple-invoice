@@ -6,7 +6,5 @@ export interface Recipient {
     city: string,
     stateprov: string,
     postal: string,
-    phone: string,
-    email: string,
     created: string
   }

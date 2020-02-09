@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "invoice",
+  "type": "object",
+  "properties": {
+    "invoiceId": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "invoiceNumber": {
+      "type": "number"
+    }
+  },
+  "required": ["invoiceId", "userId", "invoiceNumber"],
+  "additionalProperties": true
+}

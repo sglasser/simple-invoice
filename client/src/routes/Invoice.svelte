@@ -83,10 +83,7 @@
     UIFacade.upsertInvoice(currentInvoice);
   }
   const print = () => createPdf(currentInvoice);
-  const handleLogo = (event) => {
-    const files = event.target.files;
-    UIFacade.uploadLogo(files[0]);
-  }
+  const handleLogo = (event) => { if (event.target.files) UIFacade.uploadLogo(event.target.files[0]); }
   const navigateWithDirtyCheck = () => $isInvoiceDirty ? displayInvoiceDirtyModal.set(true) : push('#/invoices');
   const cancelNavigation = (event) => { if (!event.detail) push('#/invoices') };
 </script>
@@ -103,10 +100,10 @@
     <div class='card' class:centered-img="{currentInvoice.paid}">
       <div class='card-body'>
         <div class='container d-flex flex-column'>
-          <div class='d-flex justify-content-between align-items-center'>
+          <div class='d-flex justify-content-between align-items-top'>
             <div class='d-flex align-items-center justify-content-between'>
               <div style='position: relative;'>
-                <img src={companyLogoURI} width='100px' alt='company logo'>
+                <img src={companyLogoURI} width='125px' alt='company logo'>
                 <div class='clip-upload' style='position: absolute; right: -25px; top: -10px;'>
                   <label for="file-input">
                     <i class="fas fa-file-upload"></i>
@@ -122,7 +119,7 @@
                   />       
                 </div>
               </div>
-              <div class='w-50'>
+              <div class='ml-4'>
                 <h3>
                   {$user.company || ''} 
                 </h3>

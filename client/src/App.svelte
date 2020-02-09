@@ -10,15 +10,14 @@
 	import { onMount } from 'svelte';
 
 	let toast;
-	let isAuthenticating = false;
+	let isAuthenticating = true;
 
 	onMount(async () => {
 		const locationHash = window.location.hash;
 		if (/access_token|id_token|error/.test(locationHash)) {
-			isAuthenticating = true;
 			await Auth.handleAuthentication(locationHash);
-			isAuthenticating = false;
 		}
+		isAuthenticating = false;
 	});
 
 	const login = () => Auth.login();
@@ -33,14 +32,14 @@
   <div class='app container mx-auto'>
     <Router {routes}/>
   </div>
-{:else if !$user.isAuthenticated && !isAuthenticating}
+{:else if isAuthenticating}
+	<div class='container mx-auto w-100 mt-5 text-center'>
+		Loading Account...
+	</div>
+{:else} 
 	<h1 class='text-center mt-5'>Invoicing Made Simple</h1>
 	<div class='container mx-auto w-100 mt-5 text-center'>
 		<button class='btn btn-primary btn-lg' on:click={login}>Sign In</button>
-	</div>
-{:else} 
-	<div class='container mx-auto w-100 mt-5 text-center'>
-		Loading Account...
 	</div>
 {/if}
 
