@@ -19,7 +19,7 @@
     }, timeout)
   }
 
-  export function stickyToast(color, header, message) {
+  export const stickyToast = (color, header, message) => {
     toastStore.set({
       color,
       header,
@@ -28,7 +28,7 @@
     });
   }
 
-  const close = () => toastStore.set({visible: false})
+  export const clearToasts = () => toastStore.set({visible: false});
 </script>
 
 {#if $toastStore.visible}
@@ -36,7 +36,7 @@
     style="position: absolute; top: 0; right: 0; z-index: 10;" 
     in:fly="{{ x: 200, duration: 500 }}" 
     out:fade
-    on:click="{close}">
+    on:click="{clearToasts}">
     <Toast class="mr-1">
       <ToastHeader>
         {$toastStore.header}

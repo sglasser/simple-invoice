@@ -1,12 +1,31 @@
-import { invoices, recipients } from './stores.js';
+import { 
+  invoices,
+  recipients 
+} from './stores.js';
 import { user } from './stores.js';
 import { get } from 'svelte/store';
 import { loading } from './stores.js';
 import { isInvoiceDirty } from './stores.js';
-import { createInvoice, getInvoices, updateInvoice, getMaxInvoiceNumber } from './api/invoice-api.js';
-import { createUser, updateUser, getUploadUrl, uploadFile } from './api/user-api.js';
-import { getRecipients, createRecipient } from './api/recipient-api.js';
-import { toast, stickyToast } from './components/Toast.svelte';
+import { 
+  createInvoice,
+  getInvoices,
+  updateInvoice,
+  getMaxInvoiceNumber 
+} from './api/invoice-api.js';
+import { 
+  updateUser,
+  getUploadUrl,
+  uploadFile 
+} from './api/user-api.js';
+import { 
+  getRecipients,
+  createRecipient 
+} from './api/recipient-api.js';
+import {
+  toast,
+  stickyToast,
+  clearToasts 
+} from './components/Toast.svelte';
 import { uuid } from 'uuidv4';
 
 class AppFacade {
@@ -20,6 +39,7 @@ class AppFacade {
 
   async getInvoices () {
     try {
+      clearToasts();
       loading.set(true);
       const result = await getInvoices(get(user).authToken);
       invoices.set(result);
@@ -33,6 +53,7 @@ class AppFacade {
 
   async getMaxInvoiceNumber () {
     try {
+      clearToasts();
       loading.set(true);
       const result = await getMaxInvoiceNumber(get(user).authToken);
       return parseInt(result) + 1;
@@ -46,6 +67,7 @@ class AppFacade {
 
   async getRecipients () {
     try {
+      clearToasts();
       loading.set(true);
       const result = await getRecipients(get(user).authToken);
       recipients.set(result);
@@ -59,6 +81,7 @@ class AppFacade {
 
   async createRecipient (recipient) {
     try {
+      clearToasts();
       recipient.recipientId = uuid();
       let recipientClone = {
         ...recipient,
@@ -78,6 +101,11 @@ class AppFacade {
 
   async upsertInvoice (invoice) {
     try {
+      clearToasts();
+      if (!this.isInvoiceValid(invoice)) {
+        stickyToast('danger', 'Error', 'Invoice must have a recipient, one line item, created and due date.');
+        return;
+      }
       loading.set(true);
       if (invoice.invoiceId) {
         await updateInvoice(invoice, get(user).authToken);
@@ -99,6 +127,7 @@ class AppFacade {
 
   async updateInvoicer (invoicer) {
     try {
+      clearToasts();
       loading.set(true);
       // copy invoicer and remove properties for db
       let invoicerClone = {...invoicer};
@@ -117,6 +146,7 @@ class AppFacade {
 
   async uploadLogo (file) {
     try {
+      clearToasts();
       loading.set(true);
       const result = await getUploadUrl(get(user).authToken);
       await uploadFile(result.uploadUrl, file);
@@ -128,6 +158,10 @@ class AppFacade {
     } finally {
       loading.set(false);
     }
+  }
+
+  isInvoiceValid (invoice) {
+    return invoice.recipient && invoice.lineItems.length && invoice.created && invoice.due;
   }
 }
 

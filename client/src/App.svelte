@@ -10,14 +10,19 @@
 	import { onMount } from 'svelte';
 
 	let toast;
-	let isAuthenticating = true;
+	let isAuthenticating = false;
 
 	onMount(async () => {
+    console.log('a', isAuthenticating)
 		const locationHash = window.location.hash;
 		if (/access_token|id_token|error/.test(locationHash)) {
-			await Auth.handleAuthentication(locationHash);
+      isAuthenticating = true;
+        console.log('b', isAuthenticating)
+      await Auth.handleAuthentication(locationHash);
+        console.log('c', isAuthenticating)
 		}
-		isAuthenticating = false;
+    isAuthenticating = false;
+      console.log('d', isAuthenticating)
 	});
 
 	const login = () => Auth.login();
